@@ -17,7 +17,7 @@ import os
 from werkzeug.utils import secure_filename, send_from_directory, send_file
 
 UPLOAD_FOLDER = 'static'  # Folder to store uploaded PDFs
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'jfif'}  # Allowed file extensions for PDFs
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'jfif', 'webp'}  # Allowed file extensions for PDFs
 
 # Initialize app
 app = Flask(__name__)
@@ -33,7 +33,7 @@ flask_cors.cross_origin(
     automatic_options=False
 
 )
-CORS(app)  # Enable CORS for the entire app 
+CORS(app)  # Enable CORS for the entire app
 app.config['MONGO_URI'] = 'mongodb://localhost:27017/mydatabase'
 mongo = PyMongo(app)
 
@@ -912,7 +912,9 @@ def process_single_image_upload(prefix):
         if image_file and allowed_file(image_file.filename):
             timestamp = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
             filename = secure_filename(f"{timestamp}{str(ObjectId())}{image_file.filename}")
+            print(f" \n\n {filename} \n\n")
             image_filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            print(f" \n\n {image_filepath} \n\n")
             image_file.save(image_filepath)
             return image_filepath
     return None
@@ -1075,17 +1077,34 @@ def get_lesson_by_uid_and_bid_resume(user_id, book_id):
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+####  API sor skill title and content 
+
+@app.route('/lesson/skill/<string:id>', methods=['GET'])
+def skill(id):
+    lessons_collection = mongo.db.lessons
+    lesson = lessons_collection.find_one({"_id": id})
+    datas = lesson['days']
+    all_skill_title = []
+    for k in datas:
+        c = 1
+        daynum = "day" + str(c)
+        skill_data = k[daynum]
+        for sk in skill_data["skill_gained"]:
+            skill_name = sk.get('point','')
+            if skill_name not in all_skill_title:
+                all_skill_title.append(skill_name)
+        c = c + 1
+    return jsonify(all_skill_title)
+
 @app.route('/lesson/skill/content/<string:id>/<string:point>', methods=['GET'])
 def skill_content(id,point):
     lessons_collection = mongo.db.lessons
     lesson = lessons_collection.find_one({"_id": id})
     datas = lesson['days']
-
-    for k in datas:
+    for k in datas:        
         c = 1
         daynums = "day" + str(c)
         skill_c_data = k[daynums]
-
         for sk in skill_c_data["skill_gained"]:
             if str(point) == sk['point']:
                 skill_con = sk.get('content','')
@@ -1094,37 +1113,36 @@ def skill_content(id,point):
                 return jsonify(skill_detail)
         c = c + 1
     return None
-@app.route('/lesson/skill/<string:id>', methods=['GET'])
-def skill(id):
+
+@app.route('/lesson/careerpath/<string:id>', methods=['GET'])
+def career_path(id):
     lessons_collection = mongo.db.lessons
     lesson = lessons_collection.find_one({"_id": id})
     # print(f"\n lesson {lesson} \n")
     datas = lesson['days']
-    all_skill_title = []
+    career_paths = []
     # print(f"\n datas {datas} \n")
     for k in datas:
-        # for v in k:
-
         c = 1
-        daynum = "day" + str(c)
-        skill_data = k[daynum]
-        for sk in skill_data["skill_gained"]:
-            skill_name = sk.get('point','')
-            # print(f"\n skill_name {skill_name} \n")
-            # all_skill_title.append(skill_name)
-            if skill_name not in all_skill_title:
-                all_skill_title.append(skill_name)
+        daynumu = "day" + str(c)
+        career_step = k[daynumu]
+        for sk in career_step["career_path"]:
+            career_name = sk.get('title','')
+            # print(f"\n career_name {career_name} \n")
+            if career_name not in career_paths:
+                career_paths.append(career_name)
         c = c + 1
-    return jsonify(all_skill_title)
+        # print(career_paths)
+    return jsonify(career_paths)
 
-
+   
 @app.route('/lesson/careerpath/content/<string:id>/<string:title>', methods=['GET'])
 def career_path_content(id,title):
     lessons_collection = mongo.db.lessons
     lesson = lessons_collection.find_one({"_id": id})
     datas = lesson['days']
 
-    for k in datas:
+    for k in datas:        
         c = 1
         daynume = "day" + str(c)
         career_d_step = k[daynume]
@@ -1138,40 +1156,16 @@ def career_path_content(id,title):
         c = c + 1
     return None
 
-@app.route('/lesson/careerpath/<string:id>', methods=['GET'])
-def career_path(id):
-    lessons_collection = mongo.db.lessons
-    lesson = lessons_collection.find_one({"_id": id})
-    # print(f"\n lesson {lesson} \n")
-    datas = lesson['days']
-    career_paths = []
-    # print(f"\n datas {datas} \n")
-    for k in datas:
-        # for v in k:
-
-        c = 1
-        daynum = "day" + str(c)
-        career_step = k[daynum]
-        for sk in career_step["career_path"]:
-            career_name = sk.get('title','')
-            # print(f"\n career_name {career_name} \n")
-            # all_skill_title.append(skill_name)
-            if career_name not in career_paths:
-                career_paths.append(career_name)
-        c = c + 1
-        # print(career_paths)
-    return jsonify(career_paths)
-
-
 @app.route('/lesson/question/informative/<string:id>/<string:dayvalue>', methods=['GET'])
 def get_informative_questions(id, dayvalue):
     lessons_collection = mongo.db.lessons
     lesson = lessons_collection.find_one({"_id": id})
 
-    # print("Data", lesson['days'])
-    # input_str = dayvalue
+    if not lesson:
+        return jsonify({"error": "Lesson not found"}), 404
+    
     last_char = dayvalue[-1]
-    last_char_as_int = int(last_char) - 1
+    last_char_as_int = int(last_char)-1
 
     print("Last char:", last_char_as_int)
 
@@ -1179,31 +1173,83 @@ def get_informative_questions(id, dayvalue):
     all_informative_questions = []
 
     for k, v in datas.items():
-        # print("V:", v['informativeQues'])
         for q in v['informativeQues']:
-            # print("Q:", q.get('aType'))
-            aType = q.get('aType', '')
-            ans = q.get('ans', '')
+            aType = q.get('aType','')
+            # if aType == 'multipleChoice':
+            if aType == 'mcq':
+                ans = q.get('option', '')
+                print("ANS:", ans)
+            else:
+                ans = q.get('ans', '')
             label = q.get('label', '')
             ques = q.get('ques', '')
             selectedAns = q.get('selectedAns', '')
+            assignmarks = q.get('assignmarks', '') 
+            # options = q.get('options', '')
             temp_data = {
                 'aType': aType,
                 'ans': ans,
                 'label': label,
                 'ques': ques,
-                'selectedAns': selectedAns
+                'selectedAns': selectedAns,
+                'assignmarks': assignmarks
+                # 'options': options
             }
             all_informative_questions.append(temp_data)
 
     return jsonify(all_informative_questions)
 
+@app.route('/lesson/question/conceptual/<string:id>/<string:dayvalue>', methods=['GET'])
+def get_conceptual_questions(id, dayvalue):
+    lessons_collection = mongo.db.lessons
+    lesson = lessons_collection.find_one({"_id": id})
+    
+    # print("Data", lesson['days'])
+    # input_str = dayvalue
+    last_char = dayvalue[-1]
+    last_char_as_int = int(last_char)-1
+
+    print("Last char:", last_char_as_int)
+
+    datas = lesson['days'][last_char_as_int]
+    all_conceptual_questions = []
+
+    for k, v in datas.items():
+        # print("V:", v['informativeQues'])
+        for q in v['conceptualQues']:
+            # print("Q:", q.get('aType'))
+            aType = q.get('aType','')
+            if aType == 'multipleChoice':
+                ans = q.get('options', '')
+                print("ANS:", ans)
+            else:
+                ans = q.get('ans', '')
+            label = q.get('label', '')
+            ques = q.get('ques', '')
+            selectedAns = q.get('selectedAns', '')
+            assignmarks = q.get('assignmarks', '') 
+
+            #options
+            # options=q.get("options","")
+            # print(options)
+            temp_data = {
+                'aType': aType,
+                'ans': ans,
+                'label': label,
+                'ques': ques,
+                'selectedAns': selectedAns,
+                'assignmarks': assignmarks
+                # 'options': options
+            }
+            all_conceptual_questions.append(temp_data)
+
+    return jsonify(all_conceptual_questions)
 
 
 @app.route('/lesson/question/colearning/<string:id>/<string:dayvalue>', methods=['GET'])
 def get_colearning_questions(id, dayvalue):
     lesson = mongo.db.lessons.find_one({"_id": id})
-
+    
     if not lesson:
         return jsonify({"error": "Lesson not found"}), 404
 
@@ -1212,49 +1258,36 @@ def get_colearning_questions(id, dayvalue):
     for day in lesson.get('days', []):
         if dayvalue in day:
             colearning_data = day[dayvalue].get('colearningQues', [])
-            all_colearning_questions.extend([{
-                'aType': info.get('aType', ''),
-                'ans': info.get('ans', ''),
-                'label': info.get('label', ''),
-                'ques': info.get('ques', ''),
-                'selectedAns': info.get('selectedAns', ''),
-            } for info in colearning_data])
+            for info in colearning_data:
+                aType = info.get('aType', '')
+                label = info.get('label', '')
+                ques = info.get('ques', '')
+                selectedAns = info.get('selectedAns', '')
+                # options = info.get('options', [])
+                answertype = info.get('answertype', '')  # Add answertype
+                questionlevel = info.get('questionlevel', '')  # Add questionlevel
+                assignmarks = info.get('assignmarks', '')  # Add assignmarks
+                
+                # Check if 'aType' is 'mcq', and if so, set 'ans' to 'option'
+                if aType == 'mcq':
+                    ans = info.get('option', '')
+                else:
+                    ans = info.get('ans', '')
+
+                temp_data = {
+                    'aType': aType,
+                    'label': label,
+                    'ques': ques,
+                    'selectedAns':selectedAns,
+                    # 'options': options,
+                    'ans': ans,
+                    'answertype': answertype,
+                    'questionlevel': questionlevel,
+                    'assignmarks': assignmarks
+                }
+                all_colearning_questions.append(temp_data)
 
     return jsonify(all_colearning_questions)
-
-
-
-@app.route('/lesson/question/conceptual/<string:id>/<string:dayvalue>', methods=['GET'])
-def get_conceptual_questions(id, dayvalue):
-    lessons_collection = mongo.db.lessons
-    lesson = lessons_collection.find_one({"_id": id})
-
-    # print("Data", lesson['days'])
-    datas = lesson['days']
-    # print("DATA:", datas)
-    all_conceptual_questions = []
-
-    for k in datas:
-        # c = 1
-        # daynum = "day" + str(c)
-        conceptual_data = k[dayvalue]
-        for info in conceptual_data["conceptualQues"]:
-            aType = info.get('aType', '')
-            ans = info.get('ans', '')
-            label = info.get('label', '')
-            ques = info.get('ques', '')
-            selectedAns = info.get('selectedAns', '')
-
-            temp_data = {
-                'aType': aType,
-                'ans': ans,
-                'label': label,
-                'ques': ques,
-                'selectedAns': selectedAns
-            }
-            all_conceptual_questions.append(temp_data)
-        # c = c + 1
-    return jsonify(all_conceptual_questions)
 
 
 @app.route('/upload_application', methods=['POST'])
@@ -1284,20 +1317,6 @@ def upload_mcq():
         return jsonify({"file_path": filename}), 200
     else:
         return jsonify({"message": "Invalid image or file format."}), 400
-
-@app.route('/upload_quesimg', methods=['POST'])
-def upload_quesimg():
-
-    image = request.files.get('image')
-
-    if image and allowed_file(image.filename):
-        filename = secure_filename(image.filename)
-        filename=f"{ObjectId()}{filename}"
-        file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-        image.save(file_path)
-        return jsonify({"file_path": filename}), 200
-    else:
-        return jsonify({"message": "Invalid image or file format."}), 400        
 
 
 #------------------ UPLOAD EVENT API ----------------
@@ -1357,41 +1376,46 @@ def update_lesson(id):
     # print(data['title'])
 
     if 'applications' in data:
-        applications_data = data['applications']
+        # Change for handling multiple applications
+        applications_data = request.json.get('applications', [])
         applications = []
 
         for app_data in applications_data:
-            application_image_filename = process_single_image_upload(
-                f"{app_data['key']}_image") if f"{app_data['key']}_image" in request.files else app_data.get('image', '')
+
+            # for app_file in days:
+            application_image_filename = process_single_image_upload(f"{app_data['key']}_image")
+
             application_content = {
-                'image': application_image_filename,
-                'text': app_data.get('text', ''),
-                'content': app_data.get('content', '')
+            'image': application_image_filename,
+            'text': app_data.get('text', ''),
+            'content': app_data.get('content', ''),
+            'url': app_data.get('link', '')
             }
             applications.append(application_content)
 
-        lesson['applications'] = applications
-    #
-    # if 'application' in data:
-    #     lesson['application'] = data['application']
     if 'content' in data:
         lesson['content'] = data['content']
     if 'objective' in data:
         lesson['objective'] = data['objective']
     if 'relevance_to_subject' in data:
-        # /lesson['relevance_to_subject'] = data['relevance_to_subject']
-        relevance_data = data['relevance_to_subject']
-        relevances = []
-        print(relevance_data)
-
-        # for rev_data in relevance_data:
-        #     relevance_to_sub = {
-        #         'relevance_point': request.json.get('relevance_point', ''),
-        #         'relevance_content': request.json.get('relevance_content', '')
-        #     }
-        #     relevances.append(relevance_to_sub)
+        lesson['relevance_to_subject'] = data['relevance_to_subject']
     if 'events_problem' in data:
         lesson['events_problem'] = data['events_problem']
+        All_event = []
+        event_image_filename = process_image_upload('event')
+        event_image = {
+            'path': event_image_filename,
+            'width': request.json.get('event_image_width', 0),
+            'height': request.json.get('event_image_height', 0)
+        }
+        event = {
+            'event_title': request.json.get('event_title',''),
+            'event_content': request.json.get('event_content',''),
+            'event_hyperlink': request.json.get('event_hyperlink',''),
+            'event_date': request.json.get('event_date',''),
+            'event_image': event_image
+        }
+        All_event.append(event)
     if 'career_path' in data:
         lesson['career_path'] = data['career_path']
     if 'questions' in data:
@@ -1417,24 +1441,39 @@ def update_lesson(id):
     if 'days' in data:
         lesson['days'] = data['days']
         datas = data['days']
-        # print(datas)
-        c = 1;
+        # all_skill_title = []
+        # print(f"\n allskilltite {all_skill_title} \n")
+        c = 1
         for day in data['days']:
             daynum = "day" + str(c)
-            # print(day[daynum]["application"])
+            # print(f"\n\n day[daynum] {day[daynum]}\n")
+
             for eachApplication in day[daynum]["application"]:
-
-                print(eachApplication)
-
-
-
+                # print(f"\n\n eachApplication {eachApplication}\n")
+                a= process_image_upload(eachApplication)
+                # image_filepath
+                if eachApplication['image']:
+                    image_data = eachApplication['image'] # Remove the "data:image/jpeg;base64," part
+                    image_bytes = bytes(image_data, 'utf-8')
+                    timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
+                    image_filename = f'{timestamp}{"_"}{str(ObjectId())}.jpg'  # You can use a more appropriate naming scheme
+                    
+                    image_path = os.path.join(app.config['UPLOAD_FOLDER'], image_filename)
+                    with open(image_path, 'wb') as f:
+                        f.write(image_bytes)
+                eachApplication['image'] = image_path
             for eachEvents in day[daynum]["events_problem"]:
-                print(eachEvents)
-
-                # eachApplication['image'].save(os.path.join(app.config['UPLOAD_FOLDER'], eachApplication['image']))
-
+                if eachEvents['image']:
+                    image_data = eachEvents['image']  # Remove the "data:image/jpeg;base64," part
+                    image_bytes = bytes(image_data, 'utf-8')
+                    timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
+                    image_filename = f'{timestamp}{"_event"}{str(ObjectId())}.jpg'  # You can use a more appropriate naming scheme
+                    image_path = os.path.join(app.config['UPLOAD_FOLDER'], image_filename)
+                    with open(image_path, 'wb') as f:
+                        f.write(image_bytes)
+                eachEvents['image'] = image_path
             c = c + 1
-            # skill(day[daynum])
+            # all_skill_title = all_skill_title + skill(day[daynum])
 
     lessons_collection.update_one({"_id": id}, {"$set": lesson})
     updated_lesson = lessons_collection.find_one({"_id": lesson['_id']})
@@ -1446,7 +1485,6 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-
 @app.route('/uploads/<filename>')
 def send_image(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
@@ -1454,6 +1492,7 @@ def send_image(filename):
 
 @app.route('/lesson/image/<lesson_id>', methods=['PUT'])
 def upload_image_for_lesson(lesson_id):
+    print("upload_image_for_lesson")
     lessons_collection = mongo.db.lessons
 
     # Retrieving the lesson using the correct ObjectId
@@ -1565,8 +1604,8 @@ def get_image(image_name):
 def process_image_upload(key_prefix):
     image_filenames = []
     index = 1
-    while f'{key_prefix}_image_{index}' in request.files:
-        image_file = request.files[f'{key_prefix}_image_{index}']
+    while f'{key_prefix}image{index}' in request.files:
+        image_file = request.files[f'{key_prefix}image{index}']
         if image_file and allowed_file(image_file.filename):
             timestamp = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
             filename = secure_filename(f"{timestamp}_{str(ObjectId())}_{image_file.filename}")
