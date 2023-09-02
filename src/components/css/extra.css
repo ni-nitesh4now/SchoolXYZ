@@ -171,6 +171,10 @@ input:focus{
     padding: 0; /* Remove padding */
     margin: 0; /* Remove margin */
 }
+
+.ql-snow *{
+  text-align: left !important;
+}
 .showApp{
     
     margin-top: 1vh;
