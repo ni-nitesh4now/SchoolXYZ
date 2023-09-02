@@ -1,0 +1,1268 @@
+
+
+
+.lesson-wrapper {
+    display: flex;
+  }
+  
+  .problem-content,h6{
+    color: lightgray;
+  }
+
+.lessonTable{
+    background: white;
+    border-radius: 15px;
+    align-items: center;
+    justify-content:center;
+    padding: 5px 10px;
+    display: flex;
+    flex-direction: column;
+    margin-left: 10vh;
+    margin-top: 10vh;
+    width: 130vh;
+    
+}
+.lessonRow1{
+    display: flex;
+    width: 100%;
+    margin-top: 2vh;
+    gap:13vh
+}
+.r1c{
+    border: 1px solid black;
+    padding: 10px 7vh;
+    border-radius: 10vh;
+
+}
+.lessonRow2{
+    width: 100%;
+    border: 2px solid #4f78fe;
+    border-radius: 23px;
+    margin-top: 12px;
+    position: relative;
+}
+.services {
+    display: inline-flex;
+    padding-right: 2px;
+}
+.second-div{
+    float: left;
+    /* background-color: white; */
+    margin-left: 0px;
+    border-radius: 20px;
+  
+}
+.days{
+    border-radius: 15px;
+    padding:8px 8px;
+    outline: none;
+    border: none;
+    margin-right: 4px;
+    background-color: white;
+    text-align: center;
+    font-size: 14px;
+    padding-right: 12px;
+    color:#4f78fe;
+    font-weight: bold;
+}
+.days.active{
+    background-color:#4f78fe;
+    color: white;
+}
+.first-div{
+    position: absolute;
+    bottom: 5px;
+    right: 25px;
+  font-size: 15px;
+  background-color: white;
+}
+.add-btn{
+    background-color: white;
+    border: none;
+    font-size: 20px;
+    color: #4f78fe;
+    padding-top: 2px;
+}
+.lessonRow3{
+    display: flex;
+    padding-top: 2px;
+}
+.r3c{
+    margin-top: 10px;
+    padding-right: 10vh;
+    color: lightgrey;
+    font-weight: 500;
+}
+.txtDetail{
+    width: 100vh;
+    border: none;
+    border-bottom: 2px solid lightgrey;
+    border-radius: 0px;
+    padding: 9px;
+}
+.txtDetail:focus{
+    outline: none;
+    border: none; 
+    box-shadow: none;
+    border-bottom: 2px solid lightgrey;
+}
+
+.r3c input{
+     border: none;
+    outline: none;
+    border-bottom: 1px solid grey;
+    border-radius: 0px;
+    border-color: lightgrey;
+    font-weight: 600;
+    color:#c0c0c0;
+}
+input:focus{
+    outline: none;
+    border: none;
+}
+.mb-3{
+    width: 100vh;
+}
+.saving-message {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 5px;
+    border-radius: 5px;
+    color: gray;
+    z-index: 9999;
+  }
+/*   
+.custom-textarea {
+    width: 105vh; 
+    resize: vertical; 
+    border: '7px solid black';
+    border-radius: 90px;
+    font-size: 18px;
+    color: grey;
+    font-weight: 500;
+    outline: none;
+   
+    position: relative;
+    margin-bottom: 10vh;
+
+    text-align: left;
+    height: 25vh;
+
+  } */
+  .lessonRow4 {
+    display: flex;
+    align-items: stretch;
+    margin-left: -1vh;
+    margin-top: 2vh;
+    border: 2px solid lightgray;
+    margin-right: 8vh;
+    border-radius: 20px;
+    padding: 0; /* Remove all padding */
+    overflow: hidden; /* Hide overflow to remove any remaining space */
+}
+
+.custom-textarea {
+    flex: 1;
+    height: 30vh;
+    margin-left: -2vh;
+    border: none;
+    padding: 0; /* Remove padding */
+    margin: 0; /* Remove margin */
+}
+.showApp{
+    
+    margin-top: 1vh;
+    width: 102vh;
+    border-radius: 20px;
+    margin-left: -1vh;
+    border: 2px solid lightgray;
+    padding-left: 10px;
+    display: flex;
+    padding-top: 1px;
+    padding-bottom: 1px;
+    margin-top: 3vh;
+   margin-bottom: 3vh;
+}
+
+
+
+.showicon{
+    margin-left: 79vh;
+   background-color: white;
+   border: none;
+   color: #4f78fe;
+   font-size: 20px;
+   
+}
+.showApp h5{
+    margin-top: 1px;
+    margin-bottom: -1px;
+    margin-left: 1vh;
+    color: lightgray;
+}
+.showiconRele{
+    margin-left: 67vh;
+   background-color: white;
+   border: none;
+   color: #4f78fe;
+   font-size: 20px;
+}
+.showiconSkills{
+    margin-left: 89vh;
+    background-color: white;
+    border: none;
+    color: #4f78fe;
+    font-size: 20px;
+}
+.showiconEvents{
+    margin-left: 85.5vh;
+    background-color: white;
+    border: none;
+    color: #4f78fe;
+    font-size: 20px;
+}
+
+.showiconProb{
+    margin-left: 83.3vh;
+    background-color: white;
+    border: none;
+    color: #4f78fe;
+    font-size: 20px;
+}
+.lessonRow5 {
+    display: flex;
+    flex-direction: column;
+    margin-left: -1vh;
+    margin-top: 2vh;
+    border: 2px solid lightgray;
+    margin-right: 8vh;
+    border-radius: 20px;
+    padding: 0;
+    overflow: hidden;
+    padding-top: 14px;
+}
+
+.lessonRow5 h4 {
+    margin-left: 10px;
+    color: lightgray;
+    margin-right: 40vh;
+
+}
+.linkIcon{
+    color: lightgray;
+}
+.row1, .row2 {
+    display: flex;
+    flex-direction: row;
+    align-items: center; 
+}
+ .r5c2 ,.r5c1{
+    flex: 1; /* Distribute equal width to all columns */
+    padding: 1rem;
+    box-sizing: border-box; /* Include padding in width calculation */
+}
+
+.r5c1 {
+   
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-right: 2px solid lightgray;
+    background-color: #f0f0f0;
+    margin-left: 5vh;
+    height: 20vh;
+    border-radius: 10px ;
+    width: 10px;
+    
+}
+
+.addFileApp{
+    font-size: 2rem;
+    background-color: #f0f0f0;
+    border: none;
+    cursor: pointer;
+    margin-left: 4vh;
+    margin-right: 0vh;
+    margin-bottom: 62vh;
+    margin-top: 4vh;
+    color: #4f78fe;
+}
+.addFileApp:hover{
+    background-color:#f0f0f0;
+    color: #4f78fe;
+}
+
+
+.r5c1 label {
+    cursor: pointer; 
+}
+
+.r5c2 {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 1rem;
+    margin-left: 0vh;
+}
+
+.r5c2 input[type='text']{
+    width: 40vh;
+    border: none;
+    padding: 0.5rem ;
+    margin-bottom: 2rem;
+    border-bottom: 2px solid lightgray;
+    outline: none;
+}
+.r5c2 textarea {
+    width: 40vh;
+    border: 2px solid lightgray;
+    padding: 0.5rem ;
+    margin-bottom: 1rem;
+    border-radius: 5px;
+    box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.1);
+    outline: none;
+    color: gray;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+
+
+.r5c3{
+   
+    margin-top: -7vh;
+    padding-top: 1vh;
+    margin-right: 4vh;
+    width: 32vh;
+    height: 39vh;
+    padding-left: 18px;
+    border-left: 4px solid lightgray;
+    margin-bottom: -1vh;
+}
+.r5c3 h5{
+    margin-bottom: 13px;
+}
+.outer {
+    margin-top: 2px;
+
+  }
+  
+  /* .row {
+    display: flex;
+    overflow: auto;
+   max-height: 35vh; 
+   margin-top: 1vh;
+   flex-direction: row;
+   overflow-x: hidden;
+  } */
+  .skillRow {
+    display: flex;
+    overflow: auto; /* Allow vertical overflow within .row */
+   max-height: 35vh; /* Show only 3 rows initially */
+   margin-top: 1vh;
+   flex-direction: column;
+   overflow-x: hidden;
+  }
+  .r5c3 .description p {
+  margin-right: 1vh;
+   overflow: auto;
+  }
+  
+  .r6c3 .description p,.r9c3 .description p
+  {
+    overflow: auto;
+    text-align: left;
+  }
+  
+.r5c3 .eachCol{
+    margin-left: 1vh;
+    margin-top:12vh;
+   /* 4 columns with 10px spacing between */
+    margin: 5px; /* Spacing between columns */
+    display: flex;
+    flex-direction: row;
+}
+
+.r5c3 .description,.r6c3 .description,.r9ce .description{
+ margin-left: 1vh;
+ 
+}
+.r5c3 .description p{
+    margin-top: -1vh;
+    text-align: left;
+    width: 20vh;
+   overflow: hidden;
+}
+
+.r5c3 h5,h4{
+    color: lightgray;
+}
+
+.suggestions{
+    display: flex;
+    flex-direction: row;
+    
+}
+.suggestionOption{
+    border-radius: 20px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top:5px;
+    padding-bottom: 5px;
+    color: blue;
+    margin-left: 2vh;
+    border: 2px solid blue;
+}
+.lessonRow5 .applicationAdd{
+    width: 10vh;
+    border-radius: 15px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    margin-left: 30vh;
+    border: 2px solid#4f78fe;
+    background-color: white;
+    color: #4f78fe;
+    margin-top: 3vh;
+}
+
+
+.addFile{
+
+}
+
+
+.lessonRow6 {
+    display: flex;
+    flex-direction: column;
+    margin-left: -1vh;
+    margin-top: 2vh;
+    border: 2px solid lightgray;
+    margin-right: 8vh;
+    border-radius: 20px;
+    padding: 0;
+    overflow: hidden;
+    padding-top: 14px;
+}
+
+.lessonRow6 h4 {
+    margin-left: 15px;
+    color: lightgray;
+}
+
+.r6c2 {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 1rem;
+    margin-left: 2vh;
+}
+
+.r6c2 input[type='text']{
+    width: 60vh;
+    border: none;
+    padding: 0.5rem ;
+    margin-bottom: 2rem;
+    border-bottom: 2px solid lightgray;
+    font-weight: 600;
+    color: gray;
+}
+.r6c2 textarea {
+    width: 60vh;
+    border: 2px solid lightgray;
+    padding: 0.5rem ;
+    margin-bottom: 1rem;
+    border-radius: 5px;
+    box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.1);
+    outline: none;
+    color: gray;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+
+
+.r6c3{
+  
+      
+    margin-top: -7vh;
+    padding-top: 1vh;
+    margin-right: 4vh;
+    width: 32vh;
+    height: 39vh;
+    padding-left: 18px;
+    border-left: 4px solid lightgray;
+    margin-bottom: -1vh;
+
+}
+
+
+.r9c3{
+  
+      
+    margin-top: -7vh;
+    padding-top: 1vh;
+    margin-right: 4vh;
+    width: 32vh;
+    height: 45vh;
+    padding-left: 18px;
+    border-left: 4px solid lightgray;
+    margin-bottom: -1vh;
+
+}
+.r6c3 .eachCol,.r9c3 .eachCol{
+    margin-left: 1vh;
+    margin-top:6vh;
+   /* 4 columns with 10px spacing between */
+    margin: 5px; /* Spacing between columns */
+    display: flex;
+    margin-bottom: 2vh;
+}
+.r6c3 h5,.r9c3 h5{
+    color: lightgray;
+}
+
+
+.r6c2{
+    flex: 2; /* Distribute equal width to all columns */
+    padding: 1rem;
+    box-sizing: border-box; /* Include padding in width calculation */
+}
+
+
+.lessonRow6 .applicationAdd{
+    width: 10vh;
+    border-radius: 15px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    margin-left: 50vh;
+    border: 2px solid#4f78fe;
+    background-color: white;
+    color: #4f78fe;
+    margin-top: 3vh;
+}
+
+
+.lessonRow7 {
+    display: flex;
+    flex-direction: column;
+    margin-left: -1vh;
+    margin-top: 2vh;
+    border: 2px solid lightgray;
+    margin-right: 8vh;
+    border-radius: 20px;
+    padding: 0;
+    overflow: hidden;
+    padding-top: 14px;
+}
+
+.lessonRow7 h4 {
+    margin-left: 15px;
+    color: lightgray;
+}
+
+.r7c2 {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 1rem;
+    margin-left: 2vh;
+}
+
+.r7c2 .custom-dropdown,input[type='text']{
+    width: 60vh;
+    border: none;
+    padding: 0.5rem ;
+    margin-bottom: 2vh;
+    border-bottom: 3px solid lightgray;
+    outline: none;
+    color: rgb(136, 130, 130);
+    font-weight: 600;
+}
+
+
+.r7c2 textarea {
+    width: 60vh;
+    border: 2px solid lightgray;
+    padding: 0.5rem ;
+    margin-bottom: 1rem;
+    border-radius: 5px;
+    box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.1);
+    outline: none;
+    color: gray;
+    font-size: 15px;
+    font-weight: 600;
+    margin-top: 3vh;
+}
+
+
+
+.r7c3{
+       
+    margin-top: -6vh;
+    padding-top: 1vh;
+    margin-right: 4vh;
+    width: 32vh;
+    height: 45vh;
+    padding-left: 18px;
+    border-left: 4px solid lightgray;
+    margin-bottom: 0vh;
+}
+.r8c3{
+    margin-top: -6vh;
+    padding-top: 1vh;
+  margin-right: 4vh;
+  width: 32vh;
+  height: 62vh;                         /*changed*/
+  padding-left: 18px;
+  border-left: 4px solid lightgray;
+}
+
+.r7c3 h5{
+    color: lightgray;
+}
+
+.r7c2{
+    flex: 2; /* Distribute equal width to all columns */
+    padding: 1rem;
+    box-sizing: border-box; /* Include padding in width calculation */
+}
+
+.r7c3 .description p {
+    margin-right: 1vh;
+     overflow: auto;
+     display: flex;
+     flex-direction: column;
+     
+    }
+    
+  
+    
+  .r7c3 .eachCol{
+      margin-left: 1vh;
+      margin-top:12vh;
+     /* 4 columns with 10px spacing between */
+      margin: 5px; /* Spacing between columns */
+      display: flex;
+      flex-direction: row;
+  }
+  
+  .r7c3 .description{
+   margin-left: 1vh;
+   
+   
+  }
+  .probelm-content,h6,.skills-content,.r9c3 p{
+    color: lightgray;
+  }
+  .r9c3 h5{
+    color: gray;
+  }
+
+.careerRight{
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 10px;
+    text-align: center;
+}
+.careerRight p{
+    margin-top: 10px;
+}
+.carrerRightInside{
+    display: flex;
+    flex-direction: column;
+    padding: 0px;
+}
+  .r7c3 h5,h4{
+      color: gray;
+  }
+
+
+.lessonRow7 .applicationAdd{
+    width: 10vh;
+    border-radius: 15px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    margin-left: 50vh;
+    border: 2px solid#4f78fe;
+    background-color: white;
+    color: #4f78fe;
+}
+
+
+.content_btn{
+    position: absolute;
+    bottom: 44vh;
+    right: 45vh;
+    font-size: 25px;
+    padding: 0px;
+    height: 40px; /* Set the desired height of the button */
+  width: 40px; /* Set the same value as height to make it fully round */
+  border-radius: 50%;
+  font-weight: 600;
+  background-color: white;
+  color:#4f78fe;
+  border: none;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+.box2{
+    border: 2px solid lightgray;
+    margin-top: 40px;
+    width: 120vh;
+    padding-left: 10vh;
+    border-radius: 25px;
+    padding-top: 20px;
+}
+  
+.b2row1{
+    display: flex;
+    padding-top: 2px;
+    padding-left: 2px;
+    
+}
+.row1c{
+    padding-right: 15px;
+    width: 30%;
+}
+.mb-2{
+    width: 30vh;
+    border-radius: 25px;
+}
+
+.b2row2
+{
+        width: 90%;
+        border: 2px solid #4f78fe;
+        border-radius: 23px;
+        margin-top: 12px;
+        position: relative;
+        margin-bottom: 10px;
+        
+}
+.b2row2 .first-div{
+    position: absolute;
+    bottom: 5px;
+    right: 15px;
+  font-size: 15px;
+  background-color: white;
+  
+}
+
+.b2row3{
+    display: flex;
+}
+
+.row3c{
+    width: 30%;
+    padding: 20px;
+    text-align: center;
+    color:  lightgrey;
+}
+
+.custom-dropdown:focus {
+    border: 1px solid #ced4da; /* Add a border to show focus */
+    box-shadow: 0 0 0 0px grey; /* Add a shadow to show focus */
+  }
+ .custom-dropdown option{
+    border-radius: 40px;
+  }
+  .row3c Select{
+    border-radius: 90px;
+    padding-left: 14px;
+    color:  grey;
+    font-weight: 600;
+  }
+.row3c .form{
+    border-radius: 20px;
+    padding-left: 14px;
+    color:  grey;
+    font-weight: 500;
+    
+}
+.b2row4{
+    margin-right: 10px;
+    margin-bottom: 20px;
+}
+.writetxt{
+    width: 100vh;
+    border: none;
+    border-bottom: 2px solid lightgrey;
+    border-radius: 0px;
+}
+.writetxt:focus{
+    outline: none;
+    border: none; /* Add a border to show focus */
+    box-shadow: none;
+    border-bottom: 2px solid lightgrey;
+}
+.b2row5{
+    margin-bottom: 10px;
+}
+.filluptxt{
+    width: 30vh;
+    border: none;
+    border-bottom: 2px solid grey;
+    border-radius: 0px;
+}
+.filluptxt:focus{
+    outline: none;
+    border: none; /* Add a border to show focus */
+    box-shadow: none;
+    border-bottom: 2px solid grey;
+}
+.b2row5 .textarea{
+    width: 100vh; /* Adjust the width as needed */
+    resize: vertical; /* Allow vertical resizing */
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    font-size: 18px;
+    padding: 15px;
+    color:lightgray;
+    font-weight: 600;
+    outline: none;
+}
+.b2row6{
+    border: 1px solid #ccc;
+    margin-right: 70px;
+    padding-left: 20px;
+    padding-top: 30px;
+    display: flex;
+    border-radius: 10px;
+    padding-bottom: 50px;
+    color: darkgray;
+    font-weight: 600;
+}
+.mb-3 input[type="radio"] + .custom-radio-label {
+    display: inline-block;
+    vertical-align: middle; /* Align the labels vertically with the radio buttons */
+    margin-right: 15px; /* Add some spacing between the radio buttons */
+    margin-top: 2px;
+    color: grey;
+    font-weight: 600;
+  }
+  
+.row6right{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-left: 50px;
+    color: grey;
+    font-weight: 600;
+}
+.row6rightcol input[type="text"]{
+    padding-left: 20px;
+    border-bottom: 1px solid #ccc;
+    width: 40vh;
+    outline: none;
+    border-top: 1px solid white;
+    border-left:1px solid white ;
+    border-right: 1px solid white;
+}
+.row6rightcol input[type="radio"]{
+    padding-top: 35px;
+    padding-right: 10vh;
+}
+
+.b2row7{
+    border: 1px solid #ccc;
+    margin-right: 65px;
+    padding-left: 20px;
+    padding-top: 30px;
+    display: flex;
+    border-radius: 10px;
+    margin-top: 20px;
+    padding-bottom: 20px;
+    color:  grey;
+    font-weight: 600;
+}
+.row7right{
+    display:  flex;
+    margin-left: 30px;
+    
+}
+.row7rightcol{
+    margin-right: 15vh;
+}
+  
+.b2row8{
+    border: 1px solid #ccc;
+    margin-right: 65px;
+    padding-left: 20px;
+    padding-top: 30px;
+    display: flex;
+    border-radius: 10px;
+    margin-top: 20px;
+    padding-bottom: 20px;
+    color:grey;
+    font-weight: 600;
+}
+.row8right{
+   margin-left: 3vh;
+}
+ h5{
+    color:grey;
+    font-weight: 600;
+}
+.customInput{
+    border: none;
+    border-bottom: 1px solid grey;
+    width: 50vh;
+
+}
+.customInput:focus{
+    border: none;
+    border-bottom: 1px solid grey;
+}
+.b2row9{
+    display: flex;
+    padding-left: 30vh;
+    margin-top: 5vh;
+    margin-right: 10vh;
+    margin-bottom: 20px;
+}
+.row9c{
+    margin-right: 10vh;
+    
+}
+.next-button{
+    padding: 5px 50px;
+    border-radius: 20px;
+    background-color: white;
+    color: #4f78fe;;
+    border:2px solid  blue;
+}
+.finishbutton{
+    padding: 5px 50px;
+    border-radius: 20px;
+    color: white;
+    background-color: #4f78fe;;
+    border: 1px solid #4f78fe;;
+}
+
+.row10{
+    margin-top: 40px;
+    margin-bottom: 70px;
+}
+.complete{
+    padding: 5px 50px;
+    border-radius: 20px;
+    color: white;
+    background-color: #4f78fe;
+    border: 1px solid #4f78fe;;
+}
+
+.lessonRow10 {
+    display: flex;
+    flex-direction: column;
+    margin-left: -1vh;
+    margin-top: 2vh;
+    border: 2px solid lightgray;
+    margin-right: 8vh;
+    border-radius: 20px;
+    padding: 0;
+    overflow: hidden;
+    padding-top: 14px;
+  }
+  .lessonRow10 .applicationAdd {
+    width: 10vh;
+    border-radius: 15px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    margin-left: 50vh;
+    border: 2px solid#4f78fe;
+    background-color: white;
+    color: #4f78fe;
+    margin-top: 3vh;
+  }
+  .lessonRow10 .row1 {
+    padding-left: 10px;
+  }
+  .r10c4 {
+    width: 60vh;
+    border: 2px solid lightgray;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    border-radius: 5px;
+    box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.1);
+    outline: none;
+    color: gray;
+    font-size: 15px;
+    font-weight: 600;
+    margin-top: 3vh;
+    height: 100px;
+    position: relative;
+  }
+  .r10c4 .row input[type="text"] {
+    width: 100px;
+    border: none;
+    padding: 0.5rem;
+    /* height: 35px; */
+    border-bottom: 2px solid lightgray;
+    outline: none;
+  }
+  .r10c4 .row {
+    padding-left: 20px;
+    padding-right: 20px;
+    /* position: absolute; */
+    top: 0;
+    left: 15px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .career-info {
+    position: relative;
+ 
+    /* background-color: lightblue; */
+  }
+  .career-grid input {
+    padding: 0;
+    max-width: 150px;
+  }
+  .career-grid {
+    /* position: absolute; */
+    margin-top: 20px;
+    display: flex;
+    grid-template-columns: 50px 50px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    padding-right: 100px;
+    column-gap: 10px;
+    /* row-gap: 20px; */
+    width: 450px;
+    height: 150px;
+    /* left: 0; */
+    /* top: 4323px;
+    left: 501px; */
+    border-radius: 34px;
+    border: 3px solid rgba(216, 216, 216, 1);
+    flex-direction: column;
+    overflow-y: auto;
+    
+  }
+  .career-grid .input1 {
+    margin-left:7vh;
+    width: 10vh;
+    justify-content: center;
+    text-align: center;
+  }
+  .career-grid .input2 {
+    /* background-color: lightpink; */
+    margin-left:5vh;
+    width: 20vh;
+    text-align: center;
+  }
+  .image {
+    position: absolute;
+    bottom: 30px;
+    right: 20px;
+  }
+  .career-image-button {
+    /* height: 30px; */
+    /* padding: 2px; */
+    border-radius: 100px;
+    padding-left: 10px;
+  
+    padding-right: 10px;
+    border: 2px solid rgba(216, 216, 216, 1);
+    background-color: white;
+    color: blue;
+    margin-right: 3vh;
+   font-size: 20px;
+  }
+  .skills-info {
+    margin-left: 0;
+    padding: 0;
+    padding-left: 10px;
+    font-size: 10px;
+  }
+  div.datepicker{
+    width: 200px;
+    border-radius: 10px;
+  }
+
+  
+.row10{
+    margin-top: 40px;
+    margin-bottom: 70px;
+    margin-left: 38vh;
+}
+
+
+.complete{
+    padding: 5px 50px;
+    border-radius: 20px;
+    color: white;
+    background-color: #4f78fe;
+    border: 1px solid #4f78fe;;
+}
+
+.completesave{
+    padding: 5px 50px;
+    border-radius: 20px;
+    color: white;
+    background-color: #4f78fe;
+    width: 20vh;
+    margin-left: 1vh;
+    border: 1px solid #4f78fe;;
+}
+
+.saving-message {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 5px;
+    border-radius: 5px;
+    color: gray;
+    z-index: 9999;
+  }
+
+
+
+  .you {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 8px;
+    /* margin-bottom: 10px; */
+    margin-left: -10px;
+    border-radius: 50%;
+    border: 1px solid gray;
+    font-size: 10px;
+  }
+
+  .question-info-box{
+    border: 2px solid lightgrey;
+    padding-top: 20px;
+    margin-left: -1vh;
+    margin-right: 6vh;
+    padding-left: 20px;
+    padding-right: -10px;
+    border-radius: 30px;
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+  }
+  .question-view{
+    margin-top: 0px;
+    border-left: 1px solid  lightgray;
+    border-right: 1px solid  lightgray;
+    border-bottom: 1px solid  lightgray; 
+    border-radius: 30px;
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+    margin-left: -1vh;
+    margin-right: 6vh;
+   
+    padding: 20px;
+    background-color: lightgray;
+  }
+
+  .questionViewQuestion{
+    color: blue;
+    font-size: 17px;
+ 
+
+  }
+  .answerCss{
+    color: grey;
+    margin-left: 50px;
+  }
+
+  .short-ans-div .short-answer-title {
+    width: 100%;
+    margin-top: 20px;
+  }
+  .short-ans-desc {
+    margin-top: 30px;
+    border: none;
+    /* border: 1px solid lightgray; */
+    border-radius: 30px;
+    height: 12vh;
+    margin-bottom: 80px;
+  }
+  
+  .fillup-ques-input {
+    margin-top: 30px;
+    width: 90%;
+    border: none;
+    border-bottom: 1px solid rgb(170, 156, 156);
+    color: rgb(168, 120, 120);
+  }
+  .fillup-ans-input {
+    margin-top: 30px;
+    width: 90%;
+    border: none;
+    border-bottom: 1px solid rgb(164, 158, 158);
+    color: rgb(167, 109, 109);
+  }
+  .truefalse-ques-input {
+    margin-top: 30px;
+    width: 90%;
+    border: none;
+    border-bottom: 1px solid rgb(164, 158, 158);
+    color: rgb(167, 109, 109);
+  }
+  
+  .truefalse-ans-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid lightgray;
+    padding: 15px;
+    border-radius: 30px;
+    margin-top: 50px;
+  }
+  
+  .truefalse-ans-section .middle-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .truefalse-ans-section .middle-section .true {
+    margin-right: 30px;
+  }
+  .truefalse-ans-section .middle-section .true,
+  .truefalse-ans-section .middle-section .false {
+    font-size: 17px;
+  }
+  .truefalse-ans-section .right-section button {
+    padding: 5px 10px;
+    border-radius: 20px;
+    color: white;
+    background-color: #4f78fe;
+    border: 1px solid #4f78fe;
+  }
+  .MCQ-ques .MCQ-ques-input {
+    margin-top: 30px;
+    width: 90%;
+    border: none;
+    border-bottom: 1px solid rgb(164, 158, 158);
+    color: rgb(167, 109, 109);
+  }
+  .MCQ-option {
+    border: 1px solid lightgray;
+    margin-top: 30px;
+    border-radius: 30px;
+    padding: 10px;
+    margin-right: 10px;
+  }
+  .MCQ-option h5 {
+    margin-left: 30px;
+  }
+  .MCQ-option .option-grid {
+    margin-left: 150px;
+  }
+  .MCQ-button {
+    padding: 5px 10px;
+    border-radius: 20px;
+    color: white;
+    background-color: #4f78fe;
+    border: 1px solid #4f78fe;
+    margin-left: 500px;
+    margin-top: 10px;
+  }
+
+  .admin{
+    color:black
+  }

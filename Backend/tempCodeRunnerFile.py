@@ -1,0 +1,1 @@
+# Enable CORS for the entire app 

@@ -1,0 +1,80 @@
+{
+  "name": "aietech",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@ckeditor/ckeditor5-build-classic": "^39.0.x",
+    "@ckeditor/ckeditor5-image": "^39.0.1",
+    "@ckeditor/ckeditor5-react": "^6.1.x",
+    "@fortawesome/fontawesome-svg-core": "^6.4.2",
+    "@fortawesome/free-solid-svg-icons": "^6.4.2",
+    "@fortawesome/react-fontawesome": "^0.2.0",
+    "@syncfusion/ej2-react-richtexteditor": "^22.2.5",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
+    "@tinymce/tinymce-react": "^4.3.0",
+    "axios": "^1.4.0",
+    "bootstrap": "^5.3.0",
+    "bootstrap-icons": "^1.10.5",
+    "codemirror": "^6.0.1",
+    "cors": "^2.8.5",
+    "draft-js": "^0.11.7",
+    "draftjs-to-html": "^0.9.1",
+    "express": "^4.18.2",
+    "html-to-draftjs": "^1.5.0",
+    "js-cookie": "^3.0.5",
+    "lodash.debounce": "^4.0.8",
+    "quill-blot-formatter": "^1.0.5",
+    "quill-image-resize-module": "^3.0.0",
+    "react": "^18.2.0",
+    "react-beautiful-dnd": "^13.1.1",
+    "react-bootstrap": "^2.7.4",
+    "react-datepicker": "^4.16.0",
+    "react-dnd-html5-backend": "^16.0.1",
+    "react-dom": "^18.2.0",
+    "react-draft-wysiwyg": "^1.15.0",
+    "react-draggable": "^4.4.5",
+    "react-dropzone": "^14.2.3",
+    "react-froala-wysiwyg": "^4.1.0",
+    "react-icons": "^4.9.0",
+    "react-image-crop": "^10.1.5",
+    "react-quill": "^2.0.0",
+    "react-quilljs": "^1.3.3",
+    "react-resizable": "^3.0.5",
+    "react-router-dom": "^6.12.1",
+    "react-script": "^2.0.5",
+    "react-scripts": "5.0.1",
+    "react-select": "^5.7.4",
+    "react-toastify": "^9.1.3",
+    "tinymce": "^6.6.2",
+    "web-vitals": "^2.1.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "gh-pages": "^5.0.0"
+  }
+}
