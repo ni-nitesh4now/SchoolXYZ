@@ -299,7 +299,6 @@ input:focus{
     color: #4f78fe;
 }
 
-
 .r5c1 label {
     cursor: pointer; 
 }
@@ -433,9 +432,9 @@ input:focus{
 }
 
 
-.addFile{
+/* .addFile{
 
-}
+} */
 
 
 .lessonRow6 {
