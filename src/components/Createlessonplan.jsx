@@ -376,7 +376,7 @@ const Createlessonplan = () => {
                                     <p>User Name</p>
                                 </div>
                                 <div className='userCol5'>
-                                     <a style={{ textDecoration: 'none' }} onClick={()=>handleViewClick(l._id)}>View</a>
+                                     <a style={{ textDecoration: 'none', cursor: 'pointer' }} onClick={()=>handleViewClick(l._id)}>View</a>
                                 </div>
                                 <a style={{ ...styles.funcLink ,marginRight: '20px',marginTop:'5px',marginLeft:'-10px' }} onClick={()=>handleDeleteLessonPlan(l._id)} >
                                             <AiFillDelete />
@@ -394,4 +394,4 @@ const Createlessonplan = () => {
     )
 }
 
-export default Createlessonplan
+export default Createlessonplan;

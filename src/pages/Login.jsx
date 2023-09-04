@@ -201,11 +201,6 @@ const Login = () => {
 
 
 
-
-
-
-
-
   const radios = [
     { name: 'Admin', value: '1' },
     { name: 'User', value: '2' },

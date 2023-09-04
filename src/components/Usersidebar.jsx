@@ -18,7 +18,7 @@ const Usersidebar = ({ children }) => {
         {
             path: "/createplan",
             name: "Create plan",
-            icon: <FaBook />
+            icon: <FaBook fontSize={'medium'}/>
         },
         {
             path: "/assignedplan",
@@ -40,7 +40,7 @@ const Usersidebar = ({ children }) => {
 
     return (
         <div className='container'>
-            <div style={{ width: isOpen ? "200px" : "60px" }} className='sidebar'>
+            <div style={{ width: isOpen ? "30vw" : "60px" }} className='sidebar'>
                 <div className='top_section'>
                     <img style={{ display: isOpen ? "block" : "none" }} alt='SP' src={LOGO2} className='logo_icon' />
                     <h1 style={{ display: isOpen ? "block" : "none" }} className='logo'>School</h1>
@@ -69,7 +69,7 @@ const Usersidebar = ({ children }) => {
                     </div>
                 </div>
             </div>
-            <main>{children}</main>
+            <main className='main-side'>{children}</main>
         </div>
     )
 }
