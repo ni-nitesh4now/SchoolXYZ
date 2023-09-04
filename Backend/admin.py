@@ -10,7 +10,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from pymongo.errors import DuplicateKeyError
 from bs4 import BeautifulSoup
 
-import uuid  # Import the uuid module
+import uuid
 
 import os
 
@@ -832,23 +832,19 @@ def delete_book(book_id):
 #             return jsonify({"error": "No book found for the provided id"}), 404
 #     except Exception as e:
 #         return jsonify({"error": str(e)}), 500
-#
-#
-#
-# @app.route('/lessons/forcomplete/<string:user_id>/<string:book_id>',methods=['GET'])
-# def get_lesson_by_uid_and_bid_complete(user_id,book_id):
-#     try:
-#         lesson=mongo.db.lessons.find_one({"user_id":user_id,"book_id":book_id,"completed":"Yes","status":"completed"})
-#         if(lesson):
-#             return jsonify(lesson)
-#         else:
-#             return jsonify({"error": "No book found for the provided id"}), 404
-#     except Exception as e:
-#         return jsonify({"error": str(e)}), 500
-#
-#
-#
-#
+
+@app.route('/lessons/forcomplete/<string:user_id>/<string:book_id>',methods=['GET'])
+def get_lesson_by_uid_and_bid_complete(user_id,book_id):
+    try:
+        lesson=mongo.db.lessons.find_one({"user_id":user_id,"book_id":book_id,"completed":"Yes","status":"completed"})
+        if(lesson):
+            return jsonify(lesson)
+        else:
+            return jsonify({"error": "No book found for the provided id"}), 404
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
 # @app.route('/lesson/<string:id>', methods=['PUT'])
 # def update_lesson(id):
 #     lessons_collection = mongo.db.lessons

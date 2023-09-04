@@ -48,7 +48,7 @@ const Extra = () => {
   const [activeButtonIndex, setActiveButtonIndex] = useState(0);
   const [activeButton, setActiveButton] = useState("Informative");
   const [activeQButton, setActiveQButton] = useState(0);
-  const [selectedQuestionType, setSelectedQuestionType] = useState(""); // State to track the selected question type
+  const [selectedQuestionType, setSelectedQuestionType] = useState("");
   const [selectedAnswerType, setSelectedAnswerType] = useState([]);
   const [optionsDisabled, setOptionsDisabled] = useState(false);
   const [isCorrectAnswer, setIsCorrectAnswer] = useState(null);
@@ -95,7 +95,6 @@ const Extra = () => {
   const [isSaveClick, setIsSaveClick] = useState(false);
   const [days, setDays] = useState("");
   const [daysData, setDaysData] = useState([]);
-  // const[contentTxt,setContentTxt]=useState('')
   const [lid, setLid] = useState("");
   const [editorInstance, setEditorInstance] = useState(null);
   const [serviceList, setServiceList] = useState([{ service: "" }]);
@@ -261,7 +260,6 @@ const Extra = () => {
     }
   }, [daysData, isSaveClick]);
   useEffect(() => {
-    //     // setSkillSet([])
     const fetchhh = async () => {
       console.log("lid", lid);
       const res = await getSKills(lid);
@@ -282,7 +280,6 @@ const Extra = () => {
   }, [lid]);
 
   useEffect(() => {
-    //     // setSkillSet([])
     const fetchhh = async () => {
       try {
         console.log("lid", lid);
@@ -338,8 +335,10 @@ const Extra = () => {
   const handleCareerPath = async (e) => {
     e.preventDefault();
     if (!careerImage) {
-      alert("Please add an image");
+      toast.error("Please add an image");
       return;
+    } else {
+      toast.success("Item added successfully");
     }
     const formData = new FormData();
 
@@ -907,7 +906,6 @@ const Extra = () => {
     try {
       const fetcContent = async () => {
         const response = await getCareerContent(lid, suggested);
-
         // Update state with fetched skill content
         setCareerDescription(response.data.description);
         setCareerSteps(response.data.careerStep);
@@ -940,13 +938,11 @@ const Extra = () => {
             body: formData,
           });
           if (!response.ok) {
-            alert("image upload failed");
+            toast.error("Image ")
             return;
           } else {
-            const data = await response.json(); // Parse the JSON response
-            const filePath = data.file_path; // Extract the "file_path" field
-
-            // Do something with the file path, like displaying it
+            const data = await response.json(); 
+            const filePath = data.file_path; 
 
             setOp1im(filePath);
           }
@@ -1006,7 +1002,6 @@ const Extra = () => {
           } else {
             const data = await response.json(); // Parse the JSON response
             const filePath = data.file_path; // Extract the "file_path" field
-
             // Do something with the file path, like displaying it
 
             setTxtQuestionImg(filePath);
@@ -1553,8 +1548,10 @@ const Extra = () => {
     setIsCorrectAnswer(event.target.value);
     setOptionsDisabled(event.target.value != "NO");
   };
+  
   const handleNextQuestion = useCallback((e) => {
     e.preventDefault();
+    toast.success("MOVED TO NEXT")
     if (selectedQuestionType === "shortAnswer") {
       const q = txtQuestion;
       const img = txtQuestionImage;
@@ -1782,6 +1779,9 @@ const Extra = () => {
       setSelectedQuestionType("");
     }
   });
+  const handleAddItem = (text) => {
+    toast.success(`Item ${text} successfully!`);
+  };
   const handleTitleChange = (event) => {
     const inputText = event.target.value;
     const capitalizedText =
@@ -1789,9 +1789,11 @@ const Extra = () => {
     setTitle(capitalizedText);
   };
   const handleButtonActiveClick = (event) => {
+    
     handleButtonClick(activeButtonIndex);
     //setActiveButton(buttonType);
     event.preventDefault();
+    toast.success("FINISHED");
     const buttonType = activeButton;
     if (buttonType === "Colearning") {
       //setServiceQList(colearningQuestionList)
@@ -1878,7 +1880,6 @@ const Extra = () => {
     };
     setCareerStepsData([...careerSteps, data]);
     setCareerInputYear1("");
-
     setCareerInputStep1("");
     setCareerSteps([...careerSteps, data]);
   };
@@ -2075,14 +2076,17 @@ const Extra = () => {
                           onClick={(e) => {
                             if (isapplicationUpdate) {
                               handleApplication(e);
+                              handleAddItem("add");
                             } else {
                               handleUpdateApplication(e);
                               setCurrentlyEditingIndex(-1);
+                              handleAddItem("update");
                             }
                           }}
                         >
                           {isapplicationUpdate ? "Add" : "Update"}
                         </button>
+                        <ToastContainer autoClose={3000} position="top-right" />
                       </div>
                       <div className="r5c3">
                         <h5>Added Item</h5>
@@ -2781,7 +2785,7 @@ const Extra = () => {
                               className="career-image-button fa-6x"
                               onClick={(e) => handleSteps(e)}
                             >
-                              +
+                              +      
                             </button>
                           </div>
                         </div>
@@ -2959,6 +2963,7 @@ const Extra = () => {
                       </div>
                     ))}
                   </div>
+                  
                   <div className="b2row3">
                     <div className="row3c">
                       <Form.Select
