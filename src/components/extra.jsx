@@ -505,7 +505,7 @@ const Extra = () => {
       ],
       ["link"],
       ["clean"],
-      [{ size: ["small", false, "large", "huge"] }], // Add size options for images
+      [{ size: ["small", false, "large", "huge"] }], 
     ],
   };
 
