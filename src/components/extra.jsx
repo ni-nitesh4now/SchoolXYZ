@@ -155,6 +155,7 @@ const Extra = () => {
   const [careerSteps, setCareerSteps] = useState([]);
   const [careerStepsData, setCareerStepsData] = useState([]);
   const fileInputRef2 = useRef(null);
+  const fileInputRef3 = useRef(null);
 
   const [isapplicationUpdate, setIsApplicationUpdate] = useState(true);
   const [currentlyEditingIndex, setCurrentlyEditingIndex] = useState(-1);
@@ -170,6 +171,7 @@ const Extra = () => {
 
   const [mcqQues, setMcqQues] = useState("");
   const [txtQuestionImage, setTxtQuestionImage] = useState("");
+  const [uploadedImageFilename, setUploadedImageFilename] = useState("");
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
@@ -350,11 +352,13 @@ const Extra = () => {
       });
 
       if (response.ok) {
+        const responseData = await response.json();
+        const filename = responseData.filename;
         const app = {
           title: careerTitle,
           description: careerDescription,
           careerStep: careerSteps,
-          image: careerImage.name,
+          image: filename,
         };
 
         setCareerPath([...careerPath, app]);
@@ -534,6 +538,7 @@ const Extra = () => {
     if (applicationImage) {
       const formData = new FormData();
       formData.append("image", applicationImage);
+      console.log("Application image ase hori :", formData);
 
       try {
         const response = await fetch(
@@ -545,10 +550,15 @@ const Extra = () => {
         );
 
         if (response.ok) {
+          const responseData = await response.json();
+          const filename = responseData.filename;
+          console.log("application response:", response);
+          console.log("Application filename:::", filename);
+          setUploadedImageFilename(filename);
           const app = {
             title: applicationTitle,
             content: applicationContent,
-            image: applicationImage.name,
+            image: filename,
             url: applicationLinkUrl,
           };
 
@@ -663,10 +673,12 @@ const Extra = () => {
         });
 
         if (response.ok) {
+          const responseData = await response.json();
+          const filename = responseData.filename;
           const eventData = {
             title: eventTitle,
             content: eventContent,
-            image: eventImage.name,
+            image: filename,
             url: eventLinkUrl,
             date: eventDate,
           };
@@ -705,7 +717,7 @@ const Extra = () => {
   const handleEditEvents = (index) => {
     const clickedItem = events[index];
     const img = "http://127.0.0.1:5000/static/" + clickedItem.image;
-    if (eventImage) setEventImage(img);
+    if (clickedItem.image) setEventImage(img);
     else setEventImage("");
     setImageUploadedEvent(true);
     setSelectedEvent(true);
@@ -777,11 +789,13 @@ const Extra = () => {
             body: formData,
           });
           if (response.ok) {
+            const responseData = await response.json();
+            const filename = responseData.filename;
             const data = {
               about: problemAbout,
               content: problemContent,
               description: problemDescription,
-              image: problemImage.name,
+              image: filename,
             };
             setProblem([...problem, data]);
             setProblemAbout("");
@@ -934,7 +948,7 @@ const Extra = () => {
 
             // Do something with the file path, like displaying it
 
-            setOp2im(filePath);
+            setOp1im(filePath);
           }
         };
         upload();
@@ -942,7 +956,7 @@ const Extra = () => {
         alert("image upload failed");
       }
     }
-  }, [option2Image]);
+  }, [option1Image]);
 
   useEffect(() => {
     if (option2Image) {
@@ -965,7 +979,7 @@ const Extra = () => {
 
             // Do something with the file path, like displaying it
 
-            setOp1im(filePath);
+            setOp2im(filePath);
           }
         };
         upload();
@@ -973,7 +987,7 @@ const Extra = () => {
         alert("image upload failed");
       }
     }
-  }, [option1Image]);
+  }, [option2Image]);
   useEffect(() => {
     if (txtQuestionImage) {
       const formData = new FormData();
@@ -1003,14 +1017,15 @@ const Extra = () => {
         alert("image upload failed");
       }
     }
-  }, []);
+  }, [txtQuestionImage]);
   const handleImageChangeMcqQues = (e) => {
+    console.log("MCQ ki horii idr to vro");
     const selectedFile = e.target.files[0];
     // console.log("Quesssss");
     // console.log("here is image for ques", selectedFile);
     if (selectedFile) {
       setTxtQuestionImage(selectedFile);
-      fileInputRef.current.value = null;
+      fileInputRef3.current.value = null;
     }
   };
 
@@ -1024,6 +1039,7 @@ const Extra = () => {
   };
 
   const handleImageChangeMcqOption2 = (e) => {
+    console.log("dekh idr to hora hai yee");
     const selectedFile = e.target.files[0];
     if (selectedFile) {
       setOption2Image(selectedFile);
@@ -1040,12 +1056,13 @@ const Extra = () => {
     }
   };
   const handleImageChangeShortAnsQues = (e) => {
+    console.log("dekh call to hora hai ye");
     const selectedFile = e.target.files[0];
 
     if (selectedFile) {
       setTxtQuestionImage(selectedFile);
 
-      fileInputRef.current.value = null; // Reset the input value
+      fileInputRef3.current.value = null; // Reset the input value
     }
   };
   const handleImageChangeTrueNFalseQues = (e) => {
@@ -1054,7 +1071,7 @@ const Extra = () => {
     if (selectedFile) {
       setTxtQuestionImage(selectedFile);
 
-      fileInputRef.current.value = null; // Reset the input value
+      fileInputRef3.current.value = null; // Reset the input value
     }
   };
 
@@ -1496,13 +1513,14 @@ const Extra = () => {
         const answerArray = item.ans;
         console.log("--", answerArray);
         setTxtAnswer(item.ans);
-
+        setTxtQuestionImage(item.image);
         setSelectedQuestionType(item.aType);
         setLabel(item.label);
       }
       if (item.aType === "trueNFalse") {
         setTrueOrFalse(item.ans);
         setTxtQuestion(item.ques);
+        setTxtQuestionImage(item.image);
         setSelectedQuestionType(item.aType);
         setLabel(item.label);
         setMarks(item.marks);
@@ -1658,7 +1676,7 @@ const Extra = () => {
         marks: marks,
         selectedAns: selectedAnswerType,
       };
-      console.log("data is", data);
+      console.log("data  for mcq is", data);
 
       if (activeButton === "Informative") {
         if (activeQButton < informativeQuestionList.length) {
@@ -2079,6 +2097,10 @@ const Extra = () => {
                                     handleEditApplication(i, index);
                                   }}
                                 >
+                                  {console.log(
+                                    "saxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxyyyyyyyyyyyyyyy",
+                                    i.image
+                                  )}
                                   {i.image && (
                                     <img
                                       src={`http://127.0.0.1:5000/static/${i.image}`}
@@ -2803,7 +2825,7 @@ const Extra = () => {
                                         }}
                                       >
                                         {" "}
-                                        _._{" "}
+                                        __.__{" "}
                                       </p>
                                       <h6
                                         style={{
@@ -3031,11 +3053,11 @@ const Extra = () => {
                         <label htmlFor="fileInput">
                           <FontAwesomeIcon
                             icon={faImage}
-                            onClick={() => fileInputRef.current.click()}
+                            onClick={() => fileInputRef3.current.click()}
                           />
 
                           <input
-                            ref={fileInputRef} // Attach the ref to the input element
+                            ref={fileInputRef3} // Attach the ref to the input element
                             type="file"
                             style={{ display: "none" }}
                             onChange={handleImageChangeShortAnsQues}
@@ -3075,11 +3097,11 @@ const Extra = () => {
                       <label htmlFor="fileInput">
                         <FontAwesomeIcon
                           icon={faImage}
-                          onClick={() => fileInputRef.current.click()}
+                          onClick={() => fileInputRef3.current.click()}
                         />
 
                         <input
-                          ref={fileInputRef} // Attach the ref to the input element
+                          ref={fileInputRef3} // Attach the ref to the input element
                           type="file"
                           style={{ display: "none" }}
                           onChange={handleImageChangeMcqQues}
@@ -3168,11 +3190,11 @@ const Extra = () => {
                         <label htmlFor="fileInput">
                           <FontAwesomeIcon
                             icon={faImage}
-                            onClick={() => fileInputRef.current.click()}
+                            onClick={() => fileInputRef3.current.click()}
                           />
 
                           <input
-                            ref={fileInputRef} // Attach the ref to the input element
+                            ref={fileInputRef3} // Attach the ref to the input element
                             type="file"
                             style={{ display: "none" }}
                             onChange={handleImageChangeTrueNFalseQues}
@@ -3286,19 +3308,21 @@ const Extra = () => {
                       <div>
                         <div className="question-view-upper">
                           <h5 className="questionViewQuestion">
-                            {" "}
+                            {console.log(item)}
                             <FontAwesomeIcon icon={faCircle} /> {item.ques}
                           </h5>
                           <span>
-                            <img
-                              src={`http://127.0.0.1:5000/static/${item.image}`}
-                              alt="Uploaded"
-                              style={{
-                                width: "40px",
-                                height: "40px",
-                                borderRadius: "50%",
-                              }}
-                            />
+                            {item.image && (
+                              <img
+                                src={`http://127.0.0.1:5000/static/${item.image}`}
+                                alt="Uploaded"
+                                style={{
+                                  width: "40px",
+                                  height: "40px",
+                                  borderRadius: "50%",
+                                }}
+                              />
+                            )}
                           </span>
                         </div>
 

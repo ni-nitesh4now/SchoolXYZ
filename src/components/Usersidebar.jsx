@@ -62,7 +62,7 @@ const Usersidebar = ({ children }) => {
                         <img src={LOGO3} className='bottom_image mb-1'
                         style={{ height: isOpen ? "100px" : "50px" }}/>
                     </div>
-                    <div className='btm_link' style={{ display: isOpen ? "block" : "none" }}>
+                    <div className='btm_link v,' style={{ display: isOpen ? "block" : "none" }}>
                         <p className='btm_text'>Upgrade to &nbsp;
                             <a href='#0000' className='btm_alink'>Premium plan</a>
                             &nbsp; to unlock more features.</p>
