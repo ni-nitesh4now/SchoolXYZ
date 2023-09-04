@@ -21,6 +21,9 @@
 .main-side{
     width: 80vw;
 }
+.main-side a{
+    cursor: pointer;
+}
 .top_section {
     display: flex;
     align-items: center;

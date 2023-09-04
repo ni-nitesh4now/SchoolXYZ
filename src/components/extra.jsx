@@ -852,6 +852,7 @@ const Extra = () => {
       setSkillGain(updated);
       setSelectedSkill(null);
       setSuggestedSkills([]);
+      handleAddItem("update");
       // Clear the selected item
     } else {
       const data = {
@@ -865,6 +866,7 @@ const Extra = () => {
     setSkillContent("");
     setSkillDescription("");
     setSkillTitle("");
+    handleAddItem("add");
   };
 
   const handleSkillTitle = (e) => {
@@ -938,18 +940,18 @@ const Extra = () => {
             body: formData,
           });
           if (!response.ok) {
-            toast.error("Image ")
+            toast.error("Image ");
             return;
           } else {
-            const data = await response.json(); 
-            const filePath = data.file_path; 
+            const data = await response.json();
+            const filePath = data.file_path;
 
             setOp1im(filePath);
           }
         };
         upload();
       } catch {
-        alert("image upload failed");
+        toast.error("Please add an image");
       }
     }
   }, [option1Image]);
@@ -967,7 +969,7 @@ const Extra = () => {
             body: formData,
           });
           if (!response.ok) {
-            alert("image upload failed");
+            toast.error("Please add an image");
             return;
           } else {
             const data = await response.json(); // Parse the JSON response
@@ -980,7 +982,7 @@ const Extra = () => {
         };
         upload();
       } catch {
-        alert("image upload failed");
+        toast.error("Please add an image");
       }
     }
   }, [option2Image]);
@@ -997,7 +999,7 @@ const Extra = () => {
             body: formData,
           });
           if (!response.ok) {
-            alert("image upload failed");
+            toast.error("Please add an image");
             return;
           } else {
             const data = await response.json(); // Parse the JSON response
@@ -1009,7 +1011,7 @@ const Extra = () => {
         };
         upload();
       } catch {
-        alert("image upload failed");
+        toast.error("Please add an image");
       }
     }
   }, [txtQuestionImage]);
@@ -1266,7 +1268,7 @@ const Extra = () => {
         //await createLesson(newLessonData);
       }
       await createLesson(newLessonData);
-      alert("lesson added");
+      toast.success("lesson added");
       if (
         searchParams.get("operation") &&
         searchParams.get("operation") === "admin"
@@ -1548,10 +1550,10 @@ const Extra = () => {
     setIsCorrectAnswer(event.target.value);
     setOptionsDisabled(event.target.value != "NO");
   };
-  
+
   const handleNextQuestion = useCallback((e) => {
     e.preventDefault();
-    toast.success("MOVED TO NEXT")
+    toast.success("MOVED TO NEXT");
     if (selectedQuestionType === "shortAnswer") {
       const q = txtQuestion;
       const img = txtQuestionImage;
@@ -1789,7 +1791,6 @@ const Extra = () => {
     setTitle(capitalizedText);
   };
   const handleButtonActiveClick = (event) => {
-    
     handleButtonClick(activeButtonIndex);
     //setActiveButton(buttonType);
     event.preventDefault();
@@ -2177,15 +2178,19 @@ const Extra = () => {
                         <button
                           className="applicationAdd"
                           onClick={(e) => {
-                            if (isreleUpdate) handleRelevance(e);
-                            else {
+                            if (isreleUpdate) {
+                              handleRelevance(e);
+                              handleAddItem("add");
+                            } else {
                               handleUpdateRele(e);
                               setCurrentlyEditingIndexRele(-1);
+                              handleAddItem("update");
                             }
                           }}
                         >
                           {isreleUpdate ? "Add" : "Update"}
                         </button>
+                        <ToastContainer autoClose={3000} position="top-right" />
                       </div>
                       <div className="r6c3">
                         <h5>Added Item</h5>
@@ -2293,10 +2298,13 @@ const Extra = () => {
                         ></textarea>
                         <button
                           className="applicationAdd"
-                          onClick={(e) => handleSkills(e)}
+                          onClick={(e) => {
+                            handleSkills(e);
+                          }}
                         >
                           {selectedSkill ? "Update" : "Add"}
                         </button>
+                        <ToastContainer autoClose={3000} position="top-right" />
                       </div>
                       <div className="r9c3">
                         <h5>Added Skills</h5>
@@ -2446,14 +2454,17 @@ const Extra = () => {
                           onClick={(e) => {
                             if (iseventUpdate) {
                               handleEvents(e);
+                              handleAddItem("add");
                             } else {
                               handleUpdateEvents(e);
                               setCurrentlyEditingIndexEvent(-1);
+                              handleAddItem("update");
                             }
                           }}
                         >
                           {iseventUpdate ? "Add" : "Update"}
                         </button>
+                        <ToastContainer autoClose={3000} position="top-right" />
                       </div>
                       <div className="r5c3">
                         <h5>Added Item</h5>
@@ -2574,10 +2585,18 @@ const Extra = () => {
                         ></textarea>
                         <button
                           className="applicationAdd"
-                          onClick={(e) => handleProblem(e)}
+                          onClick={(e) => {
+                            handleProblem(e);
+                            if (selectedProblem) {
+                              handleAddItem("update");
+                            } else {
+                              handleAddItem("add");
+                            }
+                          }}
                         >
                           {selectedProblem ? "Update" : "Add"}
                         </button>
+                        <ToastContainer autoClose={3000} position="top-right" />
                       </div>
                       <div className="r7c3">
                         <h5>Added Item</h5>
@@ -2785,17 +2804,20 @@ const Extra = () => {
                               className="career-image-button fa-6x"
                               onClick={(e) => handleSteps(e)}
                             >
-                              +      
+                              +
                             </button>
                           </div>
                         </div>
 
                         <button
                           className="applicationAdd"
-                          onClick={(e) => handleCareerPath(e)}
+                          onClick={(e) => {
+                            handleCareerPath(e);
+                          }}
                         >
                           Add
                         </button>
+                        <ToastContainer autoClose={3000} position="top-right" />
                       </div>
                       <div className="r8c3">
                         <h5>Added Career path</h5>
@@ -2813,12 +2835,10 @@ const Extra = () => {
                                 {career.careerStep.map((e, stepIndex) => (
                                   // Added stepIndex as a second argument
                                   <div style={{ display: "flex" }}>
-                                    <p>-</p>
                                     <div className="carrerRightInside">
                                       <h6 style={{ marginTop: "-0.3vh" }}>
                                         {e.step}
                                       </h6>
-
                                       <p
                                         style={{
                                           marginTop: "-0.5vh",
@@ -2829,7 +2849,39 @@ const Extra = () => {
                                         }}
                                       >
                                         {" "}
-                                        __.__{" "}
+                                        <div
+                                          style={{
+                                            display: "flex",
+                                            marginTop: 5 + "px",
+                                          }}
+                                        >
+                                          <div
+                                            style={{
+                                              width: 7 + "px",
+                                              height: 3 + "px",
+                                              backgroundColor: "blue",
+                                              marginTop: 4 + "px",
+                                              marginLeft: 6 + "px",
+                                            }}
+                                          ></div>
+                                          <div
+                                            style={{
+                                              width: 10 + "px",
+                                              height: 10 + "px",
+                                              borderRadius: 50 + "%",
+                                              backgroundColor: "blue",
+                                            }}
+                                          ></div>
+                                          <div
+                                            style={{
+                                              width: 7 + "px",
+                                              height: 3 + "px",
+                                              backgroundColor: "blue",
+                                              marginTop: 4 + "px",
+                                              marginRight: 5 + "px",
+                                            }}
+                                          ></div>
+                                        </div>{" "}
                                       </p>
                                       <h6
                                         style={{
@@ -2841,7 +2893,6 @@ const Extra = () => {
                                         {e.year}
                                       </h6>
                                     </div>
-                                    <p>-</p>
                                   </div>
                                 ))}
                                 <img
@@ -2963,7 +3014,7 @@ const Extra = () => {
                       </div>
                     ))}
                   </div>
-                  
+
                   <div className="b2row3">
                     <div className="row3c">
                       <Form.Select
@@ -3295,6 +3346,7 @@ const Extra = () => {
                       >
                         Next
                       </button>
+                      <ToastContainer autoClose={3000} position="top-right" />
                     </div>
                     <div className="row9c">
                       <button
@@ -3303,6 +3355,7 @@ const Extra = () => {
                       >
                         Finish
                       </button>
+                      <ToastContainer autoClose={3000} position="top-right" />
                     </div>
                   </div>
                 </div>
@@ -3344,28 +3397,24 @@ const Extra = () => {
                           item.aType === "arrangeOrdering") && (
                           <div>
                             <h5>Options</h5>
-                            <li>
-                              <div
-                                className="answerCss"
-                                dangerouslySetInnerHTML={{
-                                  __html: item.options.option1,
-                                }}
-                              />
-                            </li>
+                            <li
+                              className="answerCss"
+                              dangerouslySetInnerHTML={{
+                                __html: item.options.option1,
+                              }}
+                            />
                             {item.options.option1Image && (
                               <img
                                 src={`http://127.0.0.1:5000/static/${item.options.option1Image}`}
                                 style={{ height: "80px", width: "80px" }}
                               />
                             )}
-                            <li>
-                              <div
-                                className="answerCss"
-                                dangerouslySetInnerHTML={{
-                                  __html: item.options.option2,
-                                }}
-                              />
-                            </li>
+                            <li
+                              className="answerCss"
+                              dangerouslySetInnerHTML={{
+                                __html: item.options.option2,
+                              }}
+                            />
                             {item.options.option2Image && (
                               <img
                                 src={`http://127.0.0.1:5000/static/${item.options.option2Image}`}
@@ -3406,8 +3455,10 @@ const Extra = () => {
                     <button
                       className="completesave"
                       onClick={(e) => {
-                        e.preventDefault(); // Prevent the default form submission
-                        handleUpdateLesson(false);
+                        e.preventDefault();
+                        setTimeout(() => {
+                          handleUpdateLesson(false);
+                        }, 1000);
                       }}
                       style={{ marginBottom: "-20px" }}
                     >
