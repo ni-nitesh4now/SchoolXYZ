@@ -2174,7 +2174,7 @@ const Extra = () => {
                         <span>Day {index + 1}</span>
                       </button>
                     </div>
-                    {/* {serviceList.length - 1 == index && (
+                    {serviceList.length - 1 == index && (
                       <div className="first-div">
                         {serviceList.length - 1 === index &&
                           serviceList.length < 300 && (
@@ -2187,7 +2187,7 @@ const Extra = () => {
                             </button>
                           )}
                       </div>
-                    )} */}
+                    )}
                   </div>
                 ))}
               </div>
@@ -3110,7 +3110,7 @@ const Extra = () => {
                             className="skillRow"
                             style={{ marginTop: "4vh", marginLeft: "0.5vh" }}
                           >
-                            {careerPath.map((career, index) => (
+                            {careerPath.length>0 ? (careerPath.map((career, index) => (
                               <div key={index} className="careerRight">
                                 {" "}
                                 {/* Added key attribute */}
@@ -3188,7 +3188,7 @@ const Extra = () => {
                                   }}
                                 />
                               </div>
-                            ))}
+                            ))):(<></>)}
                           </div>
                         </div>
                       </div>

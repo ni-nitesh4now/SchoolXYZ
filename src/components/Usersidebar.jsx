@@ -61,7 +61,7 @@ const Usersidebar = ({ children }) => {
             to={item.path}
             key={index}
             className="link"
-            activeClassName="active"
+            activeclassname="active"
           >
             <div className="icon">{item.icon}</div>
             <div
