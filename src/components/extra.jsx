@@ -32,6 +32,14 @@ import { faImage, faL, faLink } from "@fortawesome/free-solid-svg-icons";
 const Extra = () => {
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
+  const fileInputRefEvent = useRef(null);
+  const fileInputRefApp = useRef(null);
+  const fileInputRefProblem = useRef(null);
+  const fileInputRefCareer = useRef(null);
+  const fileInputRefShortAns = useRef(null);
+  const fileInputRefMCQ = useRef(null);
+  const fileInputRefTrueFalse = useRef(null);
+  const fileInputRefFillUp = useRef(null);
   const [addcount, setAddCount] = useState(0);
 
   const location = useLocation();
@@ -117,7 +125,6 @@ const Extra = () => {
   const [suggestedSkills, setSuggestedSkills] = useState([]);
   const [selectedSkill, setSelectedSkill] = useState(null);
   const [callSkillApi, setCallSkillApi] = useState(false);
-  const fileInputRefC =useRef(null);
 
   const [careerSet, setCareerSet] = useState(["medical", "technical"]);
   const [suggestedCareer, setSuggestedCareer] = useState([]);
@@ -127,7 +134,7 @@ const Extra = () => {
   const [showLinkInput, setShowLinkInput] = useState(false);
   const [applicationLinkUrl, setApplicationLinkUrl] = useState("");
   const [editorAppLink, setEditorAppLink] = useState("");
-console.log(activeButtonIndex);
+
   const [eventTitle, setEventTitle] = useState("");
   const [eventContent, setEventContent] = useState("");
   const [eventLinkUrl, setEventLinkUrl] = useState("");
@@ -175,6 +182,9 @@ console.log(activeButtonIndex);
   const [uploadedImageFilename, setUploadedImageFilename] = useState("");
   const [updateImageApp, setUpdatedImageApp] = useState(false);
   const [updateImageEvents, setUpdatedImageEvents] = useState(false);
+  const [isProblemUpdate, setIsProblemUpdate] = useState(false);
+  const [currentlyEditingIndexProblem, setCurrentlyEditingIndexProblem] =
+    useState(-1);
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
@@ -214,7 +224,7 @@ console.log(activeButtonIndex);
     if (activeButtonIndex >= serviceList.length) {
       setServiceList([...serviceQList, { qservice: "" }]);
     }
-  },[]);
+  });
 
   useEffect(() => {
     console.log("careerstep", careerStep);
@@ -619,8 +629,7 @@ console.log(activeButtonIndex);
       setApplicationLinkUrl("");
     }
   };
-  console.log("Application Image hai ye", applicationImage);
-  console.log("dekh dikhara kya dd hui to", updateImageApp);
+
   const handleEditApplication = (i, index) => {
     const clickedItem = application[index];
     const im = "http://127.0.0.1:5000/static/" + clickedItem.image;
@@ -952,61 +961,47 @@ console.log(activeButtonIndex);
       return;
     }
     console.log(selectedProblem);
-    if (selectedProblem) {
-      console.log("Seletec dprnjnd");
-      const updated = problem.map((item) =>
-        item === selectedProblem
-          ? {
-              ...item,
-              about: problemAbout,
-              content: problemContent,
-              description: problemDescription,
-              ...(problemImage ? { image: problemImage } : {}),
-            }
-          : item
-      );
-      // Update the application list with the modified item
-      setProblem(updated);
-      setSelectedProblem(null); // Clear the selected item
-    } else {
-      if (problemImage) {
-        const formData = new FormData();
 
-        formData.append("image", problemImage);
+    if (problemImage) {
+      const formData = new FormData();
 
-        try {
-          const response = await fetch("http://127.0.0.1:5000/upload_problem", {
-            method: "POST",
-            body: formData,
-          });
-          if (response.ok) {
-            const responseData = await response.json();
-            const filename = responseData.filename;
-            const data = {
-              about: problemAbout,
-              content: problemContent,
-              description: problemDescription,
-              image: filename,
-            };
-            setProblem([...problem, data]);
-            setProblemAbout("");
-            setProblemContent("");
-            setProblemDescription("");
-            setProblemImage("");
-          } else {
-            console.error("Failed to upload application.");
-          }
-        } catch (error) {
-          console.error("Error uploading application:", error);
+      formData.append("image", problemImage);
+
+      try {
+        const response = await fetch("http://127.0.0.1:5000/upload_problem", {
+          method: "POST",
+          body: formData,
+        });
+        if (response.ok) {
+          const responseData = await response.json();
+          const filename = responseData.filename;
+          const data = {
+            about: problemAbout,
+            content: problemContent,
+            description: problemDescription,
+            image: filename,
+          };
+          setProblem([...problem, data]);
+          setProblemAbout("");
+          setProblemContent("");
+          setProblemDescription("");
+          setProblemImage("");
+        } else {
+          console.error("Failed to upload application.");
         }
-      } else {
-        const data = {
-          about: problemAbout,
-          content: problemContent,
-          description: problemDescription,
-        };
-        setProblem([...problem, data]);
+      } catch (error) {
+        console.error("Error uploading application:", error);
       }
+    } else {
+      const data = {
+        about: problemAbout,
+        content: problemContent,
+        description: problemDescription,
+      };
+      setProblem([...problem, data]);
+      setProblemAbout("");
+      setProblemContent("");
+      setProblemDescription("");
     }
   };
 
@@ -1015,7 +1010,61 @@ console.log(activeButtonIndex);
     setProblemAbout(problem[index].about);
     setProblemContent(problem[index].content);
     setProblemDescription(problem[index].description);
+    setCurrentlyEditingIndexProblem(index);
     setProblemImage(problem[index].image);
+    setIsProblemUpdate(true);
+  };
+
+  const handleUpdateProblem = async (e) => {
+    e.preventDefault();
+    if (problemImage) {
+      const formData = new FormData();
+
+      formData.append("image", problemImage);
+
+      try {
+        const response = await fetch("http://127.0.0.1:5000/upload_problem", {
+          method: "POST",
+          body: formData,
+        });
+        if (response.ok) {
+          const responseData = await response.json();
+          const filename = responseData.filename;
+          const data = {
+            about: problemAbout,
+            content: problemContent,
+            description: problemDescription,
+            image: filename,
+          };
+          const updatedProblem = [...problem];
+          updatedProblem[currentlyEditingIndexProblem] = data;
+
+          setProblem(updatedProblem);
+          setProblemAbout("");
+          setProblemContent("");
+          setProblemDescription("");
+          setProblemImage("");
+        } else {
+          console.error("Failed to upload application.");
+        }
+      } catch (error) {
+        console.error("Error uploading application:", error);
+      }
+    } else {
+      const data = {
+        about: problemAbout,
+        content: problemContent,
+        description: problemDescription,
+      };
+      const updatedProblem = [...problem];
+      updatedProblem[currentlyEditingIndexProblem] = data;
+
+      setProblem(updatedProblem);
+      setProblemAbout("");
+      setProblemContent("");
+      setProblemDescription("");
+    }
+    setIsProblemUpdate(false);
   };
 
   const handleItemClickSkill = (index) => {
@@ -1118,7 +1167,7 @@ console.log(activeButtonIndex);
     const selectedFile = e.target.files[0];
     if (selectedFile) {
       setCareerImage(selectedFile);
-      fileInputRefC.current.value = null;
+      fileInputRefCareer.current.value = null;
     }
   };
 
@@ -1217,7 +1266,7 @@ console.log(activeButtonIndex);
     // console.log("here is image for ques", selectedFile);
     if (selectedFile) {
       setTxtQuestionImage(selectedFile);
-      fileInputRef3.current.value = null;
+      fileInputRefMCQ.current.value = null;
     }
   };
 
@@ -1244,17 +1293,17 @@ console.log(activeButtonIndex);
     if (selectedFile) {
       setProblemImage(selectedFile);
       //setImageUploadedCareer(true); // Set the imageUploaded state to true
-      fileInputRef.current.value = null; // Reset the input value
+      fileInputRefProblem.current.value = null; // Reset the input value
     }
   };
   const handleImageChangeShortAnsQues = (e) => {
-    console.log("dekh call to hora hai ye");
+    // console.log("dekh call to hora hai ye");
     const selectedFile = e.target.files[0];
 
     if (selectedFile) {
       setTxtQuestionImage(selectedFile);
 
-      fileInputRef3.current.value = null; // Reset the input value
+      fileInputRefShortAns.current.value = null; // Reset the input value
     }
   };
   const handleImageChangeTrueNFalseQues = (e) => {
@@ -1263,7 +1312,16 @@ console.log(activeButtonIndex);
     if (selectedFile) {
       setTxtQuestionImage(selectedFile);
 
-      fileInputRef3.current.value = null; // Reset the input value
+      fileInputRefTrueFalse.current.value = null; // Reset the input value
+    }
+  };
+  const handleImageChangeFillUp = (e) => {
+    const selectedFile = e.target.files[0];
+
+    if (selectedFile) {
+      setTxtQuestionImage(selectedFile);
+
+      fileInputRefFillUp.current.value = null; // Reset the input value
     }
   };
 
@@ -1609,7 +1667,7 @@ console.log(activeButtonIndex);
     if (selectedFile) {
       setApplicationImage(selectedFile);
       setImageUploadedApp(true);
-      fileInputRef.current.value = null;
+      fileInputRefApp.current.value = null;
     }
   };
 
@@ -1618,7 +1676,7 @@ console.log(activeButtonIndex);
     if (selectedFile) {
       setEventImage(selectedFile);
       setImageUploadedEvent(true);
-      fileInputRef.current.value = null;
+      fileInputRefEvent.current.value = null;
     }
   };
 
@@ -1795,6 +1853,7 @@ console.log(activeButtonIndex);
       }
       setTxtQuestion("");
       setTxtQuestionImage("");
+      setTxtQuestionImg("");
       setTxtAnswer("");
       setLabel("");
       setMarks("");
@@ -1838,6 +1897,7 @@ console.log(activeButtonIndex);
       }
       setTxtQuestion("");
       setTxtQuestionImage("");
+      setTxtQuestionImg("");
       setTrueOrFalse("");
       setTxtAnswer("");
       setLabel("");
@@ -1907,6 +1967,7 @@ console.log(activeButtonIndex);
       }
       setTxtQuestion("");
       setTxtQuestionImage("");
+      setTxtQuestionImg("");
       setOption1Text("");
       setOption2Text("");
       setOption3Text("");
@@ -1967,6 +2028,7 @@ console.log(activeButtonIndex);
       }
       setTxtQuestion("");
       setTxtQuestionImage("");
+      setTxtQuestionImg("");
       setTxtAnswer("");
       setLabel("");
       setMarks("");
@@ -2049,6 +2111,8 @@ console.log(activeButtonIndex);
       setEvents("");
       setCareerPath("");
       setTxtQuestion("");
+      setTxtQuestionImg("");
+      setTxtQuestionImage("");
       setProblem("");
       setInformativeQuestionList("");
       // console.log("inside usefffect",searchParams.get('informativeQues'))
@@ -2231,13 +2295,13 @@ console.log(activeButtonIndex);
                           <label htmlFor="fileInput">
                             <Button
                               className="addFileApp"
-                              onClick={() => fileInputRefC.current.click()}
+                              onClick={() => fileInputRefApp.current.click()}
                             >
                               +
                             </Button>
 
                             <input
-                              ref={fileInputRefC} // Attach the ref to the input element
+                              ref={fileInputRefApp} // Attach the ref to the input element
                               type="file"
                               style={{ display: "none" }}
                               onChange={handleImageChange}
@@ -2600,12 +2664,12 @@ console.log(activeButtonIndex);
                           <label htmlFor="fileInput">
                             <Button
                               className="addFileApp"
-                              onClick={() => fileInputRef.current.click()}
+                              onClick={() => fileInputRefEvent.current.click()}
                             >
                               +
                             </Button>
                             <input
-                              ref={fileInputRef} // Attach the ref to the input element
+                              ref={fileInputRefEvent} // Attach the ref to the input element
                               type="file"
                               style={{ display: "none" }}
                               onChange={handleImageChangeEvent}
@@ -2733,11 +2797,11 @@ console.log(activeButtonIndex);
                           icon={faImage}
                           style={{ marginLeft: "40vh" }}
                           className="imageIcon"
-                          onClick={() => fileInputRef.current.click()}
+                          onClick={() => fileInputRefProblem.current.click()}
                         />
 
                         <input
-                          ref={fileInputRef} // Attach the ref to the input element
+                          ref={fileInputRefProblem} // Attach the ref to the input element
                           type="file"
                           style={{ display: "none" }}
                           onChange={handleImageChangeProblem}
@@ -2783,15 +2847,18 @@ console.log(activeButtonIndex);
                         <button
                           className="applicationAdd"
                           onClick={(e) => {
-                            handleProblem(e);
-                            if (selectedProblem) {
+                            if (isProblemUpdate) {
+                              handleUpdateProblem(e);
+                              setCurrentlyEditingIndexProblem(-1);
+
                               handleAddItem("update");
                             } else {
+                              handleProblem(e);
                               handleAddItem("add");
                             }
                           }}
                         >
-                          {selectedProblem ? "Update" : "Add"}
+                          {isProblemUpdate ? "Update" : "Add"}
                         </button>
                         <ToastContainer autoClose={3000} position="top-right" />
                       </div>
@@ -2867,11 +2934,11 @@ console.log(activeButtonIndex);
                           icon={faImage}
                           style={{ marginLeft: "40vh" }}
                           className="imageIcon"
-                          onClick={() => fileInputRef.current.click()}
+                          onClick={() => fileInputRefCareer.current.click()}
                         />
 
                         <input
-                          ref={fileInputRef}
+                          ref={fileInputRefCareer}
                           type="file"
                           style={{ display: "none" }}
                           onChange={handleImageChangeCareer}
@@ -3043,7 +3110,7 @@ console.log(activeButtonIndex);
                             className="skillRow"
                             style={{ marginTop: "4vh", marginLeft: "0.5vh" }}
                           >
-                             {careerPath.length > 0 ? (careerPath.map((career, index) => (
+                            {careerPath.map((career, index) => (
                               <div key={index} className="careerRight">
                                 {" "}
                                 {/* Added key attribute */}
@@ -3121,9 +3188,7 @@ console.log(activeButtonIndex);
                                   }}
                                 />
                               </div>
-                               ))): (
-                                <div>No added Items</div>
-                              )}
+                            ))}
                           </div>
                         </div>
                       </div>
@@ -3328,11 +3393,11 @@ console.log(activeButtonIndex);
                         <label htmlFor="fileInput">
                           <FontAwesomeIcon
                             icon={faImage}
-                            onClick={() => fileInputRef3.current.click()}
+                            onClick={() => fileInputRefShortAns.current.click()}
                           />
 
                           <input
-                            ref={fileInputRef3} // Attach the ref to the input element
+                            ref={fileInputRefShortAns} // Attach the ref to the input element
                             type="file"
                             style={{ display: "none" }}
                             onChange={handleImageChangeShortAnsQues}
@@ -3372,11 +3437,11 @@ console.log(activeButtonIndex);
                       <label htmlFor="fileInput">
                         <FontAwesomeIcon
                           icon={faImage}
-                          onClick={() => fileInputRef3.current.click()}
+                          onClick={() => fileInputRefMCQ.current.click()}
                         />
 
                         <input
-                          ref={fileInputRef3} // Attach the ref to the input element
+                          ref={fileInputRefMCQ} // Attach the ref to the input element
                           type="file"
                           style={{ display: "none" }}
                           onChange={handleImageChangeMcqQues}
@@ -3465,11 +3530,13 @@ console.log(activeButtonIndex);
                         <label htmlFor="fileInput">
                           <FontAwesomeIcon
                             icon={faImage}
-                            onClick={() => fileInputRef3.current.click()}
+                            onClick={() =>
+                              fileInputRefTrueFalse.current.click()
+                            }
                           />
 
                           <input
-                            ref={fileInputRef3} // Attach the ref to the input element
+                            ref={fileInputRefTrueFalse} // Attach the ref to the input element
                             type="file"
                             style={{ display: "none" }}
                             onChange={handleImageChangeTrueNFalseQues}
@@ -3536,14 +3603,14 @@ console.log(activeButtonIndex);
                         <label htmlFor="fileInput">
                           <FontAwesomeIcon
                             icon={faImage}
-                            onClick={() => fileInputRef.current.click()}
+                            onClick={() => fileInputRefFillUp.current.click()}
                           />
 
                           <input
-                            ref={fileInputRef} // Attach the ref to the input element
+                            ref={fileInputRefFillUp} // Attach the ref to the input element
                             type="file"
                             style={{ display: "none" }}
-                            onChange={handleImageChangeTrueNFalseQues}
+                            onChange={handleImageChangeFillUp}
                           />
                         </label>
                       </div>
@@ -3578,9 +3645,10 @@ console.log(activeButtonIndex);
                     </div>
                   </div>
                 </div>
-{/* Siddhi work */}
+
                 <div className="question-view">
-                  {Array.isArray(selectedQuestionList) && selectedQuestionList>0 ? (
+                  {Array.isArray(selectedQuestionList) &&
+                  selectedQuestionList.length > 0 ? (
                     selectedQuestionList.map((item, index) => (
                       <div>
                         <div className="question-view-upper">
@@ -3671,7 +3739,7 @@ console.log(activeButtonIndex);
                     <p>No questions available.</p> // A fallback message if the array is empty or not available so that the error will not obtain
                   )}
                 </div>
-{/* Siddhi work */}
+
                 {data && (
                   <div className="row10">
                     <button
