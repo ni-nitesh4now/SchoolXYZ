@@ -1222,7 +1222,6 @@ def get_colearning_questions(id, dayvalue):
 def get_conceptual_questions(id, dayvalue):
     lessons_collection = mongo.db.lessons
     lesson = lessons_collection.find_one({"_id": id})
-
     # print("Data", lesson['days'])
     datas = lesson['days']
     # print("DATA:", datas)

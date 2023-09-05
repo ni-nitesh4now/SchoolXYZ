@@ -127,7 +127,7 @@ const Extra = () => {
   const [showLinkInput, setShowLinkInput] = useState(false);
   const [applicationLinkUrl, setApplicationLinkUrl] = useState("");
   const [editorAppLink, setEditorAppLink] = useState("");
-
+console.log(activeButtonIndex);
   const [eventTitle, setEventTitle] = useState("");
   const [eventContent, setEventContent] = useState("");
   const [eventLinkUrl, setEventLinkUrl] = useState("");
@@ -3578,9 +3578,9 @@ const Extra = () => {
                     </div>
                   </div>
                 </div>
-
+{/* Siddhi work */}
                 <div className="question-view">
-                  {Array.isArray(selectedQuestionList) ? (
+                  {Array.isArray(selectedQuestionList) && selectedQuestionList>0 ? (
                     selectedQuestionList.map((item, index) => (
                       <div>
                         <div className="question-view-upper">
@@ -3671,7 +3671,7 @@ const Extra = () => {
                     <p>No questions available.</p> // A fallback message if the array is empty or not available so that the error will not obtain
                   )}
                 </div>
-
+{/* Siddhi work */}
                 {data && (
                   <div className="row10">
                     <button

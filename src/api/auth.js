@@ -283,15 +283,41 @@ export const addLesson = (lessonData) => {
     return axios.get(`${url}/lesson/careerpath/${lessonid}`);
     
   };
+  export const getInformativeQuestions = async (id, dayvalue) => {
+    try {
+      const response = await axios.get(`/lesson/question/informative/${id}/${dayvalue}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  };
+  
+  export const getColearningQuestions = async (id, dayvalue) => {
+    try {
+      const response = await axios.get(`/lesson/question/colearning/${id}/${dayvalue}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  };
+  
+  export const getConceptualQuestions = async (id, dayvalue) => {
+    try {
+      const response = await axios.get(`/lesson/question/conceptual/${id}/${dayvalue}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  };
 
   export const getCareerContent = (lessonid,title) => {
     return axios.get(`${url}/lesson/careerpath/content/${lessonid}/${title}`);
     
   };
 
-  export const getConceptualQuestion = (lessonid,day) => {
-    return axios.get(`${url}/lesson/question/conceptual/${lessonid}/${day}`);
-  };
+  // export const getConceptualQuestion = (lessonid,day) => {
+  //   return axios.get(`${url}/lesson/question/conceptual/${lessonid}/${day}`);
+  // };
 
 
 
