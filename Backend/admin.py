@@ -1145,7 +1145,6 @@ def career_path(id):
     c = 1
     for k in datas:
         # for v in k:
-
         daynum = "day" + str(c)
         career_step = k[daynum]
         for sk in career_step["career_path"]:
@@ -1163,7 +1162,6 @@ def career_path(id):
 def get_informative_questions(id, dayvalue):
     lessons_collection = mongo.db.lessons
     lesson = lessons_collection.find_one({"_id": id})
-
     # print("Data", lesson['days'])
     # input_str = dayvalue
     last_char = dayvalue[-1]

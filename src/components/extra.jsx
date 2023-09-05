@@ -117,6 +117,7 @@ const Extra = () => {
   const [suggestedSkills, setSuggestedSkills] = useState([]);
   const [selectedSkill, setSelectedSkill] = useState(null);
   const [callSkillApi, setCallSkillApi] = useState(false);
+  const fileInputRefC =useRef(null);
 
   const [careerSet, setCareerSet] = useState(["medical", "technical"]);
   const [suggestedCareer, setSuggestedCareer] = useState([]);
@@ -172,6 +173,8 @@ const Extra = () => {
   const [mcqQues, setMcqQues] = useState("");
   const [txtQuestionImage, setTxtQuestionImage] = useState("");
   const [uploadedImageFilename, setUploadedImageFilename] = useState("");
+  const [updateImageApp, setUpdatedImageApp] = useState(false);
+  const [updateImageEvents, setUpdatedImageEvents] = useState(false);
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
@@ -211,7 +214,7 @@ const Extra = () => {
     if (activeButtonIndex >= serviceList.length) {
       setServiceList([...serviceQList, { qservice: "" }]);
     }
-  });
+  },[]);
 
   useEffect(() => {
     console.log("careerstep", careerStep);
@@ -560,6 +563,10 @@ const Extra = () => {
 
   const handleApplication = async (e) => {
     e.preventDefault();
+    if (!applicationTitle && !applicationContent && !applicationLinkUrl) {
+      alert("Please fill in all required  Application section fields.");
+      return;
+    }
 
     if (applicationImage) {
       const formData = new FormData();
@@ -612,48 +619,126 @@ const Extra = () => {
       setApplicationLinkUrl("");
     }
   };
-
+  console.log("Application Image hai ye", applicationImage);
+  console.log("dekh dikhara kya dd hui to", updateImageApp);
   const handleEditApplication = (i, index) => {
     const clickedItem = application[index];
     const im = "http://127.0.0.1:5000/static/" + clickedItem.image;
-    if (clickedItem.image) setApplicationImage(im);
-    else setApplicationImage("");
+    if (clickedItem.image) {
+      setApplicationImage(im);
+      setImageUploadedApp(true);
+      setSelectedApp(true);
+    } else {
+      // setApplicationImage("");
+      setImageUploadedApp(false);
+      setSelectedApp(false);
+      setUpdatedImageApp(true);
+    }
 
-    setSelectedApp(true);
     setApplicationTitle(clickedItem.title);
     setApplicationContent(clickedItem.content);
 
     setApplicationLinkUrl(clickedItem.url);
     setIsApplicationUpdate(false);
     setCurrentlyEditingIndex(index);
-    setImageUploadedApp(true);
   };
-  const handleUpdateApplication = (e) => {
-    const imageFilename = applicationImage.split("/").pop();
-    e.preventDefault();
+  const handleUpdateApplication = async (e) => {
+    if (!updateImageApp) {
+      const imageFilename = applicationImage.split("/").pop();
+      e.preventDefault();
 
-    const updatedApp = {
-      title: applicationTitle,
-      content: applicationContent,
-      image: imageFilename,
-      url: applicationLinkUrl,
-    };
+      const updatedApp = {
+        title: applicationTitle,
+        content: applicationContent,
+        image: imageFilename,
+        url: applicationLinkUrl,
+      };
 
-    const updatedApplication = [...application];
-    updatedApplication[currentlyEditingIndex] = updatedApp;
+      const updatedApplication = [...application];
+      updatedApplication[currentlyEditingIndex] = updatedApp;
 
-    setApplication(updatedApplication);
-    setApplicationTitle("");
-    setApplicationContent("");
-    setApplicationImage(null);
-    setApplicationLinkUrl("");
-    setIsApplicationUpdate(true);
-    setImageUploadedApp(false);
-    setSelectedApp(false);
+      setApplication(updatedApplication);
+      setApplicationTitle("");
+      setApplicationContent("");
+      setApplicationImage(null);
+      setApplicationLinkUrl("");
+      setIsApplicationUpdate(true);
+      setImageUploadedApp(false);
+      setSelectedApp(false);
+    } else {
+      e.preventDefault();
+      if (applicationImage) {
+        const formData = new FormData();
+        formData.append("image", applicationImage);
+        console.log("Application image ase hori :", formData);
+
+        try {
+          const response = await fetch(
+            "http://127.0.0.1:5000/upload_application",
+            {
+              method: "POST",
+              body: formData,
+            }
+          );
+
+          if (response.ok) {
+            const responseData = await response.json();
+            const filename = responseData.filename;
+            console.log("application response:", response);
+            console.log("Application filename:::", filename);
+            setUploadedImageFilename(filename);
+            const app = {
+              title: applicationTitle,
+              content: applicationContent,
+              image: filename,
+              url: applicationLinkUrl,
+            };
+
+            const updatedApplication = [...application];
+            updatedApplication[currentlyEditingIndex] = app;
+
+            setApplication(updatedApplication);
+            setApplicationTitle("");
+            setApplicationContent("");
+            setApplicationImage(null);
+            setApplicationLinkUrl("");
+            setIsApplicationUpdate(true);
+            setImageUploadedApp(false);
+            setSelectedApp(false);
+          } else {
+            console.error("Failed to upload application.");
+          }
+        } catch (error) {
+          console.error("Error uploading application:", error);
+        }
+      } else {
+        const app = {
+          title: applicationTitle,
+          content: applicationContent,
+          url: applicationLinkUrl,
+        };
+        const updatedApplication = [...application];
+        updatedApplication[currentlyEditingIndex] = app;
+
+        setApplication(updatedApplication);
+        setApplicationTitle("");
+        setApplicationContent("");
+
+        setApplicationLinkUrl("");
+        setIsApplicationUpdate(true);
+        setImageUploadedApp(false);
+        setSelectedApp(false);
+      }
+      setUpdatedImageApp(false);
+    }
   };
 
   const handleRelevance = (e) => {
     e.preventDefault();
+    if (!releTitle && !releContent) {
+      alert("Please fill in all required Relevance section  fields.");
+      return;
+    }
     const data = {
       title: releTitle,
       content: releContent,
@@ -688,6 +773,11 @@ const Extra = () => {
 
   const handleEvents = async (e) => {
     e.preventDefault();
+    if (!eventTitle && !eventContent && !eventLinkUrl) {
+      alert("Please fill in all required Event section fields.");
+      return;
+    }
+
     if (eventImage) {
       const formData = new FormData();
       formData.append("image", eventImage);
@@ -743,10 +833,16 @@ const Extra = () => {
   const handleEditEvents = (index) => {
     const clickedItem = events[index];
     const img = "http://127.0.0.1:5000/static/" + clickedItem.image;
-    if (clickedItem.image) setEventImage(img);
-    else setEventImage("");
-    setImageUploadedEvent(true);
-    setSelectedEvent(true);
+    if (clickedItem.image) {
+      setEventImage(img);
+      setImageUploadedEvent(true);
+      setSelectedEvent(true);
+    } else {
+      setImageUploadedEvent(false);
+      setSelectedEvent(false);
+      setUpdatedImageEvents(true);
+    }
+
     setEventTitle(clickedItem.title);
     setEventContent(clickedItem.content);
     setEventDate(clickedItem.date);
@@ -759,33 +855,102 @@ const Extra = () => {
 
     // console.log("index is:", currentlyEditingIndex);
   };
-  const handleUpdateEvents = (e) => {
-    const imageFilename = eventImage.split("/").pop();
-    e.preventDefault();
-    const updatedApp = {
-      title: eventTitle,
-      content: eventContent,
-      image: imageFilename,
-      url: eventLinkUrl,
-      date: eventDate,
-    };
+  const handleUpdateEvents = async (e) => {
+    if (!updateImageEvents) {
+      const imageFilename = eventImage.split("/").pop();
+      e.preventDefault();
+      const updatedApp = {
+        title: eventTitle,
+        content: eventContent,
+        image: imageFilename,
+        url: eventLinkUrl,
+        date: eventDate,
+      };
 
-    const updatedApplication = [...events];
-    updatedApplication[currentlyEditingIndexEvent] = updatedApp;
+      const updatedApplication = [...events];
+      updatedApplication[currentlyEditingIndexEvent] = updatedApp;
 
-    setEvents(updatedApplication);
-    setEventTitle("");
-    setEventContent("");
-    setEventImage(null);
-    setEventLinkUrl("");
-    setIsEventUpdate(true);
-    setEventDate("");
-    setImageUploadedEvent(false);
-    setSelectedEvent(false);
+      setEvents(updatedApplication);
+      setEventTitle("");
+      setEventContent("");
+      setEventImage(null);
+      setEventLinkUrl("");
+      setIsEventUpdate(true);
+      setEventDate("");
+      setImageUploadedEvent(false);
+      setSelectedEvent(false);
+    } else {
+      e.preventDefault();
+      if (eventImage) {
+        const formData = new FormData();
+        formData.append("image", eventImage);
+
+        try {
+          const response = await fetch("http://127.0.0.1:5000/upload_event", {
+            method: "POST",
+            body: formData,
+          });
+
+          if (response.ok) {
+            const responseData = await response.json();
+            const filename = responseData.filename;
+            const eventData = {
+              title: eventTitle,
+              content: eventContent,
+              image: filename,
+              url: eventLinkUrl,
+              date: eventDate,
+            };
+
+            const updatedApplication = [...events];
+            updatedApplication[currentlyEditingIndexEvent] = eventData;
+
+            setEvents(updatedApplication);
+            setEventTitle("");
+            setEventContent("");
+            setEventImage(null);
+            setEventLinkUrl("");
+            setIsEventUpdate(true);
+            setEventDate("");
+            setImageUploadedEvent(false);
+            setSelectedEvent(false);
+          } else {
+            console.error("Failed to upload application.");
+          }
+        } catch (error) {
+          console.error("Error uploading application:", error);
+        }
+      } else {
+        const eventData = {
+          title: eventTitle,
+          content: eventContent,
+          date: eventDate,
+          url: eventLinkUrl,
+        };
+
+        const updatedApplication = [...events];
+        updatedApplication[currentlyEditingIndexEvent] = eventData;
+
+        setEvents(updatedApplication);
+        setEventTitle("");
+        setEventContent("");
+
+        setEventLinkUrl("");
+        setIsEventUpdate(true);
+        setEventDate("");
+        setImageUploadedEvent(false);
+        setSelectedEvent(false);
+      }
+      setUpdatedImageEvents(false);
+    }
   };
 
   const handleProblem = async (e) => {
     e.preventDefault();
+    if (!problemAbout && !problemContent && !problemDescription) {
+      alert("Please fill in all required  Problem section fields.");
+      return;
+    }
     console.log(selectedProblem);
     if (selectedProblem) {
       console.log("Seletec dprnjnd");
@@ -862,7 +1027,10 @@ const Extra = () => {
 
   const handleSkills = (e) => {
     e.preventDefault();
-
+    if (!skillTitle && !skillContent && !skillDescription) {
+      alert("Please fill in all required  Skill section fields.");
+      return;
+    }
     if (selectedSkill) {
       console.log("Seletec dprnjnd");
       const updated = skillGain.map((item) =>
@@ -950,7 +1118,7 @@ const Extra = () => {
     const selectedFile = e.target.files[0];
     if (selectedFile) {
       setCareerImage(selectedFile);
-      fileInputRef.current.value = null;
+      fileInputRefC.current.value = null;
     }
   };
 
@@ -2063,13 +2231,13 @@ const Extra = () => {
                           <label htmlFor="fileInput">
                             <Button
                               className="addFileApp"
-                              onClick={() => fileInputRef.current.click()}
+                              onClick={() => fileInputRefC.current.click()}
                             >
                               +
                             </Button>
 
                             <input
-                              ref={fileInputRef} // Attach the ref to the input element
+                              ref={fileInputRefC} // Attach the ref to the input element
                               type="file"
                               style={{ display: "none" }}
                               onChange={handleImageChange}
@@ -2875,7 +3043,7 @@ const Extra = () => {
                             className="skillRow"
                             style={{ marginTop: "4vh", marginLeft: "0.5vh" }}
                           >
-                            {careerPath.map((career, index) => (
+                             {careerPath.length > 0 ? (careerPath.map((career, index) => (
                               <div key={index} className="careerRight">
                                 {" "}
                                 {/* Added key attribute */}
@@ -2953,7 +3121,9 @@ const Extra = () => {
                                   }}
                                 />
                               </div>
-                            ))}
+                               ))): (
+                                <div>No added Items</div>
+                              )}
                           </div>
                         </div>
                       </div>
@@ -3410,8 +3580,7 @@ const Extra = () => {
                 </div>
 
                 <div className="question-view">
-                  {Array.isArray(selectedQuestionList) &&
-                  selectedQuestionList.length > 0 ? (
+                  {Array.isArray(selectedQuestionList) ? (
                     selectedQuestionList.map((item, index) => (
                       <div>
                         <div className="question-view-upper">
