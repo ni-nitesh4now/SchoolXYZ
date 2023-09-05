@@ -1128,8 +1128,8 @@ input:focus{
     justify-content: center;
     align-items: center;
     padding: 8px;
-    /* margin-bottom: 10px; */
-    margin-left: -10px;
+    margin-bottom: 10px;
+    /* margin-left: -10px; */
     border-radius: 50%;
     border: 1px solid gray;
     font-size: 10px;

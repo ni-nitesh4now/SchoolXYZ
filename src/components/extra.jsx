@@ -32,6 +32,7 @@ import { faImage, faL, faLink } from "@fortawesome/free-solid-svg-icons";
 const Extra = () => {
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
+  const [addcount, setAddCount] = useState(0);
 
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
@@ -334,6 +335,21 @@ const Extra = () => {
 
   const handleCareerPath = async (e) => {
     e.preventDefault();
+    if (careerInputStep1 === "" || careerInputYear1 === "") {
+      return toast.warn("Blank input!");
+    }
+    const data = {
+      step: careerInputStep1, //1
+      year: careerInputYear1, //1
+    };
+    setAddCount(0);
+    console.log(data);
+    setCareerStepsData([...careerSteps, data]);
+    setCareerInputYear1("");
+
+    setCareerInputStep1("");
+    console.log(data);
+    careerSteps.push(data);
     if (!careerImage) {
       toast.error("Please add an image");
       return;
@@ -436,22 +452,29 @@ const Extra = () => {
     }
   }, []);
 
-  // useEffect(() => {
-  //   const autosaveInterval = setInterval(() => {
-  //     if (!saving) {
-  //       setIsManualUpdate(false)
-  //       saveFormData();
-  //       showToast();
-  //       setIsSaveClick(true)
-  //     }
-  //   }, 1000);
+  useEffect(() => {
+    const autosaveInterval = setInterval(() => {
+      saveFormData();
+    }, 60000); // Autosave every 60 seconds (adjust the interval as needed)
 
-  //   return () =>{
-  //       clearInterval(autosaveInterval);
-  //       toast.dismiss();
+    // Clear the autosave interval when the component unmounts
+    return () => {
+      clearInterval(autosaveInterval);
+    };
+  }, [
+    isManualUpdate,
+    daysData,
+    application,
+    content,
+    title,
+    objective,
+    events,
+    problem,
+    careerPath,
+    releText,
+    skillGain,
+  ]);
 
-  //     };
-  // }, [application,content,title,objective,events,problem,careerPath,releText,skillGain]);
   const showToast = () => {
     toast.success("Autosaved!", {
       position: "top-right",
@@ -468,10 +491,14 @@ const Extra = () => {
       console.log("form update", daysData);
       try {
         setSaving(true);
-        handleUpdateLesson(false);
+        await handleUpdateLesson(false);
         setSaving(false);
       } catch (error) {
         console.error("Error saving data:", error);
+        toast.error("Error autosaving form data!", {
+          position: toast.POSITION.TOP_RIGHT,
+          autoClose: 2000, // Display toast for 2 seconds
+        });
       }
     }
   };
@@ -505,7 +532,7 @@ const Extra = () => {
       ],
       ["link"],
       ["clean"],
-      [{ size: ["small", false, "large", "huge"] }], 
+      [{ size: ["small", false, "large", "huge"] }],
     ],
   };
 
@@ -1306,20 +1333,10 @@ const Extra = () => {
       colearningQues: colearningQuestionList,
       informativeQues: informativeQuestionList,
       conceptualQues: conceptualQuestionList,
-
-      // Replace with the actual appl value
     };
-    // if(daysData.length==0 || activeButtonIndex==0){
-    //   const newObjectKey = "day" + (activeButtonIndex + 1);
 
-    //   // Create the new day object
-    //   const newDayObject = { [newObjectKey]: newDay };
-    //   setDaysData(newDayObject)
-    // }
-
-    // else
     if (activeButtonIndex < daysData.length) {
-      //   console.log("already exist")
+      console.log("already exist");
       const newObj = "day" + (activeButtonIndex + 1);
       setDaysData((prev) => {
         const updatedDaysData = prev.map((day) => {
@@ -1343,10 +1360,11 @@ const Extra = () => {
         return [...prev, newDayObject];
       });
     }
+    toast.success("Saved", {
+      position: toast.POSITION.TOP_RIGHT,
+      autoClose: 2000, // Display toast for 2 seconds
+    });
   };
-  // setTimeout(() => {
-  //   setIsSaveClick(false);
-  // }, 2000);
 
   useEffect(() => {
     const func = async () => {
@@ -1402,6 +1420,12 @@ const Extra = () => {
           navigate("/resumework");
         } else {
           setActiveQButton(activeQButton - 1);
+        }
+        if (isManualUpdate) {
+          toast.success("Moved to resume!", {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 2000, // Display toast for 2 seconds
+          });
         }
       }
 
@@ -1875,6 +1899,11 @@ const Extra = () => {
 
   const handleSteps = (e) => {
     e.preventDefault();
+    if (careerInputStep1 === "" || careerInputYear1 === "") {
+      return toast.warn("Blank field!");
+    }
+
+    setAddCount(addcount + 1);
     const data = {
       step: careerInputStep1,
       year: careerInputYear1,
@@ -1913,7 +1942,7 @@ const Extra = () => {
                         <span>Day {index + 1}</span>
                       </button>
                     </div>
-                    {serviceList.length - 1 == index && (
+                    {/* {serviceList.length - 1 == index && (
                       <div className="first-div">
                         {serviceList.length - 1 === index &&
                           serviceList.length < 300 && (
@@ -1926,7 +1955,7 @@ const Extra = () => {
                             </button>
                           )}
                       </div>
-                    )}
+                    )} */}
                   </div>
                 ))}
               </div>
@@ -2674,7 +2703,7 @@ const Extra = () => {
                         />
 
                         <input
-                          ref={fileInputRef} // Attach the ref to the input element
+                          ref={fileInputRef}
                           type="file"
                           style={{ display: "none" }}
                           onChange={handleImageChangeCareer}
@@ -2700,7 +2729,7 @@ const Extra = () => {
                               }
                               className="suggestionOption"
                             >
-                              {suggestedCareer}
+                              {suggested}
                             </p>
                           ))}
                         </div>
@@ -2799,14 +2828,34 @@ const Extra = () => {
                               />
                             </div>
                           </div>
-                          <div className="image">
+                          {/* <div className="image">
                             <button
                               className="career-image-button fa-6x"
                               onClick={(e) => handleSteps(e)}
                             >
                               +
                             </button>
-                          </div>
+                          </div> */}
+                          {addcount < 3 ? (
+                            <div className="image">
+                              <button
+                                className="career-image-button fa-6x"
+                                onClick={(e) => handleSteps(e)}
+                              >
+                                +
+                              </button>
+                            </div>
+                          ) : (
+                            <div className="image">
+                              <button
+                                className="career-image-button fa-6x"
+                                onClick={(e) => handleSteps(e)}
+                                disabled
+                              >
+                                {addcount}+
+                              </button>
+                            </div>
+                          )}
                         </div>
 
                         <button
@@ -2997,7 +3046,7 @@ const Extra = () => {
                             <span>Q {index + 1}</span>
                           </button>
                         </div>
-                        {serviceQList.length - 1 == index && (
+                        {/* {serviceQList.length - 1 == index && (
                           <div className="first-div">
                             {serviceQList.length - 1 === index &&
                               serviceQList.length < 15 && (
@@ -3010,7 +3059,7 @@ const Extra = () => {
                                 </button>
                               )}
                           </div>
-                        )}
+                        )} */}
                       </div>
                     ))}
                   </div>
@@ -3361,7 +3410,8 @@ const Extra = () => {
                 </div>
 
                 <div className="question-view">
-                  {selectedQuestionList &&
+                  {Array.isArray(selectedQuestionList) &&
+                  selectedQuestionList.length > 0 ? (
                     selectedQuestionList.map((item, index) => (
                       <div>
                         <div className="question-view-upper">
@@ -3447,7 +3497,10 @@ const Extra = () => {
                           </div>
                         )}
                       </div>
-                    ))}
+                    ))
+                  ) : (
+                    <p>No questions available.</p> // A fallback message if the array is empty or not available so that the error will not obtain
+                  )}
                 </div>
 
                 {data && (

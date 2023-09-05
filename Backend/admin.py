@@ -1098,10 +1098,10 @@ def skill(id):
     datas = lesson['days']
     all_skill_title = []
     # print(f"\n datas {datas} \n")
+    c = 1
     for k in datas:
         # for v in k:
 
-        c = 1
         daynum = "day" + str(c)
         skill_data = k[daynum]
         for sk in skill_data["skill_gained"]:
@@ -1120,8 +1120,8 @@ def career_path_content(id,title):
     lesson = lessons_collection.find_one({"_id": id})
     datas = lesson['days']
 
+    c = 1
     for k in datas:
-        c = 1
         daynume = "day" + str(c)
         career_d_step = k[daynume]
 
@@ -1142,10 +1142,10 @@ def career_path(id):
     datas = lesson['days']
     career_paths = []
     # print(f"\n datas {datas} \n")
+    c = 1
     for k in datas:
         # for v in k:
 
-        c = 1
         daynum = "day" + str(c)
         career_step = k[daynum]
         for sk in career_step["career_path"]:
