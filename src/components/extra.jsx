@@ -123,7 +123,7 @@ const Extra = () => {
   const [suggestedSkills, setSuggestedSkills] = useState([]);
   const [selectedSkill, setSelectedSkill] = useState(null);
   const [callSkillApi, setCallSkillApi] = useState(false);
-const [isSave, setSave] = useState(false);
+  const [isSave, setSave] = useState(false);
   const [careerSet, setCareerSet] = useState(["medical", "technical"]);
   const [suggestedCareer, setSuggestedCareer] = useState([]);
   const [careerStep, setCareerStep] = useState([]);
@@ -202,13 +202,14 @@ const [isSave, setSave] = useState(false);
 
   useEffect(() => {
     if (
-      (activeButton === "Conceptual" || activeButton === "Informative" || activeButton === "Colearning") &&
+      (activeButton === "Conceptual" ||
+        activeButton === "Informative" ||
+        activeButton === "Colearning") &&
       activeQButton >= serviceQList.length
     ) {
       setServiceQList([...serviceQList, { qservice: "" }]);
     }
   }, [activeQButton]);
-  
 
   useEffect(() => {
     if (activeButtonIndex >= serviceList.length) {
@@ -224,33 +225,33 @@ const [isSave, setSave] = useState(false);
 
       setServiceList(newServiceList);
     }
-    if (daysData.length >= 1 && activeButtonIndex<daysData.length) {
+    if (daysData.length >= 1 && activeButtonIndex < daysData.length) {
       const allValue = daysData[activeButtonIndex][dynamicKey];
-      if(allValue){
-        console.log( allValue);
-      setApplication(allValue.application);
-      setTitle(allValue.title);
-      setObjective(allValue.objective);
-      setContent(allValue.content);
-      setReleText(allValue.relevance_to_subject);
-      setSkillGain(allValue.skill_gained);
-      setEvents(allValue.events_problem);
-      setCareerPath(allValue.career_path);
-      setTxtQuestion();
-      setProblem(allValue.problem);
-      setInformativeQuestionList(allValue.informativeQues);
-      setConceptualQuestionList(allValue.conceptualQues);
-      setColearningQuestionList(allValue.colearningQues);
-      if (allValue.informativeQues.length > 0) {
-        const newServiceList = allValue.informativeQues.map((day, index) => {
-          return { qservice: " " };
-        });
-        setServiceQList(newServiceList);
-        console.log("intiall new", newServiceList);
-      }
+      if (allValue) {
+        console.log(allValue);
+        setApplication(allValue.application);
+        setTitle(allValue.title);
+        setObjective(allValue.objective);
+        setContent(allValue.content);
+        setReleText(allValue.relevance_to_subject);
+        setSkillGain(allValue.skill_gained);
+        setEvents(allValue.events_problem);
+        setCareerPath(allValue.career_path);
+        setTxtQuestion();
+        setProblem(allValue.problem);
+        setInformativeQuestionList(allValue.informativeQues);
+        setConceptualQuestionList(allValue.conceptualQues);
+        setColearningQuestionList(allValue.colearningQues);
+        if (allValue.informativeQues.length > 0) {
+          const newServiceList = allValue.informativeQues.map((day, index) => {
+            return { qservice: " " };
+          });
+          setServiceQList(newServiceList);
+          console.log("intiall new", newServiceList);
+        }
       }
     }
-  }, [daysData,activeButtonIndex, isSaveClick]);
+  }, [daysData, activeButtonIndex, isSaveClick]);
 
   useEffect(() => {
     const fetchhh = async () => {
@@ -493,7 +494,6 @@ const [isSave, setSave] = useState(false);
     }
   };
 
-
   const handleApplication = async (e) => {
     e.preventDefault();
     if (!applicationTitle && !applicationContent && !applicationLinkUrl) {
@@ -533,8 +533,7 @@ const [isSave, setSave] = useState(false);
           setImageUploadedApp(false);
         } else {
         }
-      } catch (error) {
-      }
+      } catch (error) {}
     } else {
       const app = {
         title: applicationTitle,
@@ -1155,6 +1154,7 @@ const [isSave, setSave] = useState(false);
       }
     }
   }, [option2Image]);
+
   useEffect(() => {
     if (txtQuestionImage) {
       const formData = new FormData();
@@ -1184,6 +1184,7 @@ const [isSave, setSave] = useState(false);
       }
     }
   }, [txtQuestionImage]);
+
   const handleImageChangeMcqQues = (e) => {
     const selectedFile = e.target.files[0];
     if (selectedFile) {
@@ -1217,7 +1218,6 @@ const [isSave, setSave] = useState(false);
     }
   };
   const handleImageChangeShortAnsQues = (e) => {
-    // console.log("dekh call to hora hai ye");
     const selectedFile = e.target.files[0];
 
     if (selectedFile) {
@@ -1482,7 +1482,7 @@ const [isSave, setSave] = useState(false);
       setDaysData((prev) => {
         const updatedDaysData = prev.map((day) => {
           if (day.hasOwnProperty(newObj)) {
-            return { [newObj]: newDay }; 
+            return { [newObj]: newDay };
           }
           return day;
         });
@@ -1497,7 +1497,7 @@ const [isSave, setSave] = useState(false);
     }
     toast.success("Saved", {
       position: toast.POSITION.TOP_RIGHT,
-      autoClose: 2000, 
+      autoClose: 2000,
     });
   };
 
@@ -1518,8 +1518,7 @@ const [isSave, setSave] = useState(false);
 
         const res = await updateLesson(update, Lid);
         console.log("moved from assign to resume", res.data);
-      } 
-      else if (searchParams.get("operation") === "resume") {
+      } else if (searchParams.get("operation") === "resume") {
         console.log("days inside check", daysData);
         const update = {
           status: "resume",
@@ -1529,8 +1528,7 @@ const [isSave, setSave] = useState(false);
         };
         const res = await updateLesson(update, Lid);
         console.log("still in resume", res.data);
-      } 
-      else if (searchParams.get("operation") === "complete") {
+      } else if (searchParams.get("operation") === "complete") {
         const update = {
           status: "resume",
           days: daysData,
@@ -1547,7 +1545,6 @@ const [isSave, setSave] = useState(false);
     func();
   }, [daysData]);
 
-
   useEffect(() => {
     const func = async () => {
       let Lid = decodeURIComponent(searchParams.get("id"));
@@ -1558,7 +1555,7 @@ const [isSave, setSave] = useState(false);
       if (searchParams.get("operation") === "assign") {
         console.log("ismanual in ", isManualUpdate);
         const update = {
-          status: isManualUpdate ? "resume" : "assigned",
+          status: "resume",
           started: "Yes",
           completed: "No",
           days: daysData,
@@ -1566,7 +1563,7 @@ const [isSave, setSave] = useState(false);
         const res = await updateLesson(update, Lid);
         if (isManualUpdate) {
           navigate("/resumework");
-        } 
+        }
       } else if (searchParams.get("operation") === "resume") {
         console.log("days inside check", daysData);
         const update = {
@@ -1579,7 +1576,7 @@ const [isSave, setSave] = useState(false);
         const res = await updateLesson(update, Lid);
         if (isManualUpdate) {
           navigate("/completed");
-        } 
+        }
       } else if (searchParams.get("operation") === "complete") {
         console.log("ismanual in ", isManualUpdate);
         const update = {
@@ -1592,7 +1589,7 @@ const [isSave, setSave] = useState(false);
         const res = await updateLesson(update, Lid);
         if (isManualUpdate) {
           navigate("/resumework");
-        } 
+        }
         if (isManualUpdate) {
           toast.success("Moved to resume!", {
             position: toast.POSITION.TOP_RIGHT,
@@ -1772,27 +1769,23 @@ const [isSave, setSave] = useState(false);
           setInformativeQuestionList([...informativeQuestionList, data]);
           setActiveQButton((prevValue) => prevValue + 1);
         }
-      } 
-      else if (activeButton === "Conceptual") {
+      } else if (activeButton === "Conceptual") {
         if (activeQButton < conceptualQuestionList.length) {
           const updated = [...conceptualQuestionList];
           updated[activeQButton] = data;
           setConceptualQuestionList(updated);
           setActiveQButton((prevValue) => prevValue + 1);
-        } 
-        else {
+        } else {
           setConceptualQuestionList([...conceptualQuestionList, data]);
           setActiveQButton((prevValue) => prevValue + 1);
         }
-      } 
-      else if (activeButton === "Colearning") {
+      } else if (activeButton === "Colearning") {
         if (activeQButton < colearningQuestionList.length) {
           const updated = [...colearningQuestionList];
           updated[activeQButton] = data;
           setColearningQuestionList(updated);
           setActiveQButton((prevValue) => prevValue + 1);
-        } 
-        else {
+        } else {
           setColearningQuestionList([...colearningQuestionList, data]);
           setActiveQButton((prevValue) => prevValue + 1);
         }
@@ -1852,7 +1845,6 @@ const [isSave, setSave] = useState(false);
       const opt1 = option1Text;
       const opt2 = option2Text;
 
-
       const data = {
         ques: q,
         image: txtQuestionImg,
@@ -1890,8 +1882,7 @@ const [isSave, setSave] = useState(false);
           console.log("info", informativeQuestionList);
           setActiveQButton((prevValue) => prevValue + 1);
         }
-
-        } else if (activeButton === "Colearning") {
+      } else if (activeButton === "Colearning") {
         if (activeQButton < colearningQuestionList.length) {
           const updated = [...colearningQuestionList];
           updated[activeQButton] = data;
@@ -2146,7 +2137,7 @@ const [isSave, setSave] = useState(false);
                     modules={modules}
                     placeholder="Content"
                   />
-</div>
+                </div>
 
                 <div className="showApp">
                   <h5>Application</h5>
@@ -2283,7 +2274,7 @@ const [isSave, setSave] = useState(false);
                                     handleEditApplication(i, index);
                                   }}
                                 >
-                                                              {i.image && (
+                                  {i.image && (
                                     <img
                                       src={`http://127.0.0.1:5000/static/${i.image}`}
                                       style={{
@@ -2878,7 +2869,7 @@ const [isSave, setSave] = useState(false);
                         ></textarea>
                         <div className="career-info">
                           <div className="career-grid">
-                               {careerSteps &&
+                            {careerSteps &&
                               careerSteps.map((item, index) => (
                                 <div key={index}>
                                   <input
@@ -2896,7 +2887,6 @@ const [isSave, setSave] = useState(false);
                                 </div>
                               ))}
                             <div>
-                         
                               <input
                                 type="text"
                                 value={careerInputStep1}
@@ -2964,82 +2954,83 @@ const [isSave, setSave] = useState(false);
                             className="skillRow"
                             style={{ marginTop: "4vh", marginLeft: "0.5vh" }}
                           >
-                            {Array.isArray(careerPath) && careerPath.map((career, index) => (
-                              <div key={index} className="careerRight">
-                                {" "}
-                                <div className="you">You</div>
-                                {career.careerStep.map((e, stepIndex) => (
-                                  <div style={{ display: "flex" }}>
-                                    <div className="carrerRightInside">
-                                      <h6 style={{ marginTop: "-0.3vh" }}>
-                                        {e.step}
-                                      </h6>
-                                      <p
-                                        style={{
-                                          marginTop: "-0.5vh",
-                                          paddingTop: "-1px",
-                                          marginBottom: "0.5vh",
-                                          marginLeft: "-1vh",
-                                          marginRight: "-1vh",
-                                        }}
-                                      >
-                                        {" "}
-                                        <div
+                            {Array.isArray(careerPath) &&
+                              careerPath.map((career, index) => (
+                                <div key={index} className="careerRight">
+                                  {" "}
+                                  <div className="you">You</div>
+                                  {career.careerStep.map((e, stepIndex) => (
+                                    <div style={{ display: "flex" }}>
+                                      <div className="carrerRightInside">
+                                        <h6 style={{ marginTop: "-0.3vh" }}>
+                                          {e.step}
+                                        </h6>
+                                        <p
                                           style={{
-                                            display: "flex",
-                                            marginTop: 5 + "px",
+                                            marginTop: "-0.5vh",
+                                            paddingTop: "-1px",
+                                            marginBottom: "0.5vh",
+                                            marginLeft: "-1vh",
+                                            marginRight: "-1vh",
                                           }}
                                         >
+                                          {" "}
                                           <div
                                             style={{
-                                              width: 7 + "px",
-                                              height: 3 + "px",
-                                              backgroundColor: "blue",
-                                              marginTop: 4 + "px",
-                                              marginLeft: 6 + "px",
+                                              display: "flex",
+                                              marginTop: 5 + "px",
                                             }}
-                                          ></div>
-                                          <div
-                                            style={{
-                                              width: 10 + "px",
-                                              height: 10 + "px",
-                                              borderRadius: 50 + "%",
-                                              backgroundColor: "blue",
-                                            }}
-                                          ></div>
-                                          <div
-                                            style={{
-                                              width: 7 + "px",
-                                              height: 3 + "px",
-                                              backgroundColor: "blue",
-                                              marginTop: 4 + "px",
-                                              marginRight: 5 + "px",
-                                            }}
-                                          ></div>
-                                        </div>{" "}
-                                      </p>
-                                      <h6
-                                        style={{
-                                          marginTop: "-0.5vh",
-                                          paddingTop: "-1px",
-                                          marginLeft: "-1vh",
-                                        }}
-                                      >
-                                        {e.year}
-                                      </h6>
+                                          >
+                                            <div
+                                              style={{
+                                                width: 7 + "px",
+                                                height: 3 + "px",
+                                                backgroundColor: "blue",
+                                                marginTop: 4 + "px",
+                                                marginLeft: 6 + "px",
+                                              }}
+                                            ></div>
+                                            <div
+                                              style={{
+                                                width: 10 + "px",
+                                                height: 10 + "px",
+                                                borderRadius: 50 + "%",
+                                                backgroundColor: "blue",
+                                              }}
+                                            ></div>
+                                            <div
+                                              style={{
+                                                width: 7 + "px",
+                                                height: 3 + "px",
+                                                backgroundColor: "blue",
+                                                marginTop: 4 + "px",
+                                                marginRight: 5 + "px",
+                                              }}
+                                            ></div>
+                                          </div>{" "}
+                                        </p>
+                                        <h6
+                                          style={{
+                                            marginTop: "-0.5vh",
+                                            paddingTop: "-1px",
+                                            marginLeft: "-1vh",
+                                          }}
+                                        >
+                                          {e.year}
+                                        </h6>
+                                      </div>
                                     </div>
-                                  </div>
-                                ))}
-                                <img
-                                  src={`http://127.0.0.1:5000/static/${career.image}`}
-                                  style={{
-                                    width: "40px",
-                                    height: "40px",
-                                    borderRadius: "50%",
-                                  }}
-                                />
-                              </div>
-                            ))}
+                                  ))}
+                                  <img
+                                    src={`http://127.0.0.1:5000/static/${career.image}`}
+                                    style={{
+                                      width: "40px",
+                                      height: "40px",
+                                      borderRadius: "50%",
+                                    }}
+                                  />
+                                </div>
+                              ))}
                           </div>
                         </div>
                       </div>
@@ -3082,7 +3073,6 @@ const [isSave, setSave] = useState(false);
                             ? "primary"
                             : "outline-primary"
                         }
-
                         className="mb-2"
                       >
                         Colearning
@@ -3585,7 +3575,6 @@ const [isSave, setSave] = useState(false);
                     </button>
                   </div>
                 )}
-
 
                 {data && (
                   <div className="row10">

@@ -69,7 +69,7 @@ const Resumework = () => {
       Cookies.get("id"),
       res[0]._id
     );
-    console.log(lesson.data);
+    // console.log(lesson.data);
     //  console.log(lesson.data.questions)
     navigate(`/lessonplan?data=${encodeURIComponent(
       JSON.stringify(lesson.data)
