@@ -13,7 +13,7 @@ import { BiBlock } from "react-icons/bi";
 import { AiFillDelete } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import "./css/createuser.css";
-import { getCompletedAdmin, getBook, getUser } from "../api/auth";
+import { getIncompleteAdmin, getBookName, getUser } from "../api/auth";
 
 const styles = {
   container: {
@@ -42,14 +42,14 @@ const styles = {
   },
 };
 
-const Admincompleted = () => {
+const Workinprogress = () => {
   const [data, setData] = useState([]);
   const [userName, setUserName] = useState("");
   const [bookName, setBookName] = useState("");
   useEffect(() => {
     const fetch = async () => {
       try {
-        const Data = await getCompletedAdmin();
+        const Data = await getIncompleteAdmin();
         setData(Data.data);
       } catch (error) {
         console.error("Error fetching boards:", error.message);
@@ -58,33 +58,19 @@ const Admincompleted = () => {
     };
 
     fetch();
-    // if(data.length>0){
-    //   fetchBookNamesAndUserNames();
-    //   }
   }, []);
 
   useEffect(() => {
     const fetchBookNamesAndUserNames = async () => {
       try {
-        const bookPromises = data.map((l) => getBook(l.book_id));
+        const bookPromises = data.map((l) => getBookName(l.book_id));
         const userPromises = data.map((l) => getUser(l.user_id));
 
-        const arr2 = [];
         const fetchedBookNames = await Promise.all(bookPromises);
-        fetchedBookNames.forEach((user) => {
-          console.log(user);
-          arr2.push(user);
-        });
-        console.log(arr2);
-        setBookName(arr2);
+        setBookName(fetchedBookNames); // Set the book names
 
-        const arr = [];
-        const fetchedUserNames = await Promise.all(userPromises);
-        fetchedUserNames.forEach((user) => {
-          console.log(user);
-          arr.push(user);
-        });
-        setUserName(arr);
+        const userNames = await Promise.all(userPromises);
+        setUserName(userNames);
       } catch (error) {
         console.error("Error fetching book names and user names:", error);
       }
@@ -101,7 +87,7 @@ const Admincompleted = () => {
             {data.length > 0 && (
               <div>
                 {data.map((user, index) => (
-                  <div className="userRow">
+                  <div className="userRow"  key={user.name}>
                     <div className="userCol1">
                       <Form.Check
                         inline
@@ -112,7 +98,7 @@ const Admincompleted = () => {
                       />
                     </div>
                     <div className="userCol2">
-                      <h6 className="admin">{bookName[index]}</h6>
+                      <h6 className="admin">{bookName[index]?.name}</h6>
                       <p>Book Name</p>
                     </div>
                     <div
@@ -154,4 +140,4 @@ const Admincompleted = () => {
   );
 };
 
-export default Admincompleted;
+export default Workinprogress;

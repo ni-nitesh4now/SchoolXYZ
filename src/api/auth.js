@@ -565,6 +565,7 @@ export const addLesson = (lessonData) => {
   export const completedLesson=(userId)=>{
     return axios.get(`${url}/lessons/complete/${userId}`)
   }
+  
   export const getUserID=(userName)=>{
         return axios.get(`${url}/user?user_id=${userName}`);
   }
@@ -584,6 +585,11 @@ export const addLesson = (lessonData) => {
     return axios.get(`${url}/user/${userId}/completed_lessons`);
 
   };
+  
+  export const getIncompleteAdmin=()=>{
+    return axios.get(`${url}/lesson/incomplete`)
+  }
+  
   export const getCompletedAdmin=()=>{
     return axios.get(`${url}/lesson/completed`);
   }

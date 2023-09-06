@@ -1701,14 +1701,14 @@ def get_lessons_by_user_id_resume(user_id):
 @app.route('/lesson/completed', methods=['GET'])
 def get_completed_lessons():
     lessons_collection = mongo.db.lessons
-    completed_lessons = lessons_collection.find({"status": "completed"})
+    completed_lessons = lessons_collection.find({"completed": "Yes"})
     return jsonify(list(completed_lessons))
 
 
 @app.route('/lesson/incomplete', methods=['GET'])
 def get_incomplete_lessons():
     lessons_collection = mongo.db.lessons
-    incomplete_lessons = lessons_collection.find({"status": "incomplete"})
+    incomplete_lessons = lessons_collection.find({"completed": "No"})
     return jsonify(list(incomplete_lessons))
 
 
