@@ -215,7 +215,6 @@ export const addLesson = (lessonData) => {
   export const getBoardData = async (Id) => {
     try {
       const response = await axios.get(`${url}/board/${Id}`);
-      // console.log(response.data.name);
       return response.data;
     } catch (error) {
       console.error('Error fetching book:', error);
@@ -227,7 +226,6 @@ export const addLesson = (lessonData) => {
   export const getDayContent = async (Id,day_index,day_number) => {
     try {
       const response = await axios.get(`${url}/lessons/content/${Id}/${day_index}/${day_number}`);
-      // console.log(response.data.name);
       return response.data;
     } catch (error) {
       console.error('Error fetching book:', error);
@@ -283,9 +281,10 @@ export const addLesson = (lessonData) => {
     return axios.get(`${url}/lesson/careerpath/${lessonid}`);
     
   };
+  
   export const getInformativeQuestions = async (id, dayvalue) => {
     try {
-      const response = await axios.get(`/lesson/question/informative/${id}/${dayvalue}`);
+      const response = await axios.get(`${url}/lesson/question/informative/${id}/${dayvalue}`);
       return response.data;
     } catch (error) {
       throw error;
@@ -294,7 +293,7 @@ export const addLesson = (lessonData) => {
   
   export const getColearningQuestions = async (id, dayvalue) => {
     try {
-      const response = await axios.get(`/lesson/question/colearning/${id}/${dayvalue}`);
+      const response = await axios.get(`${url}/lesson/question/colearning/${id}/${dayvalue}`);
       return response.data;
     } catch (error) {
       throw error;
@@ -303,7 +302,7 @@ export const addLesson = (lessonData) => {
   
   export const getConceptualQuestions = async (id, dayvalue) => {
     try {
-      const response = await axios.get(`/lesson/question/conceptual/${id}/${dayvalue}`);
+      const response = await axios.get(`${url}/lesson/question/conceptual/${id}/${dayvalue}`);
       return response.data;
     } catch (error) {
       throw error;
@@ -315,17 +314,10 @@ export const addLesson = (lessonData) => {
     
   };
 
-  // export const getConceptualQuestion = (lessonid,day) => {
-  //   return axios.get(`${url}/lesson/question/conceptual/${lessonid}/${day}`);
-  // };
-
-
-
   
   export const getBook = async (bookId) => {
     try {
       const response = await axios.get(`${url}/book/${bookId}`);
-      // console.log(response.data.name);
       return response.data.name;
     } catch (error) {
       console.error('Error fetching book:', error);
@@ -337,7 +329,6 @@ export const addLesson = (lessonData) => {
   export const getBookData = async (bookId) => {
     try {
       const response = await axios.get(`${url}/book/${bookId}`);
-      // console.log(response.data.name);
       return response.data;
     } catch (error) {
       console.error('Error fetching book:', error);
@@ -349,7 +340,6 @@ export const addLesson = (lessonData) => {
   export const getUser=async(userId)=>{
     try{
       const response=await axios.get(`${url}/user/${userId}`);
-      //console.log("users",response.data.name);
       return response.data.name;
     }
     catch(error){
@@ -361,7 +351,6 @@ export const addLesson = (lessonData) => {
   export const getUserData=async(userId)=>{
     try{
       const response=await axios.get(`${url}/user/${userId}`);
-      //console.log("users",response.data.name);
       return response.data;
     }
     catch(error){
@@ -372,7 +361,6 @@ export const addLesson = (lessonData) => {
   export const getClassData=async(Id)=>{
     try{
       const response=await axios.get(`${url}/class/${Id}`);
-      //console.log("users",response.data.name);
       return response.data;
     }
     catch(error){
@@ -384,7 +372,6 @@ export const addLesson = (lessonData) => {
   export const getClassDataByName=async(name)=>{
     try{
       const response=await axios.get(`${url}/class/names/${name}`);
-      //console.log("users",response.data.name);
       return response.data;
     }
     catch(error){
@@ -397,7 +384,6 @@ export const addLesson = (lessonData) => {
   export const getPublicationData=async(Id)=>{
     try{
       const response=await axios.get(`${url}/publication/${Id}`);
-      //console.log("users",response.data.name);
       return response.data;
     }
     catch(error){
@@ -507,6 +493,16 @@ export const addLesson = (lessonData) => {
     }
   }
 
+  export const fetchLesson = async (id) => {
+    try {
+      const response = await axios.get(`${url}/lesson/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching lesson:', error);
+      throw error;
+    }
+  };
+
   export const getLessonByUserIdAndBookIDResume=async(user_id,book_id)=>{
     try{
       const res=await axios.get(`${url}/lessons/forresume/${user_id}/${book_id}`);
@@ -534,7 +530,6 @@ export const addLesson = (lessonData) => {
   export const getStream= async (bookId) => {
     try {
       const response = await axios.get(`${url}/book/${bookId}`);
-      // console.log(response.data.name);
       return response.data;
     } catch (error) {
       console.error('Error fetching book:', error);
@@ -593,16 +588,6 @@ export const addLesson = (lessonData) => {
     return axios.get(`${url}/lesson/completed`);
   }
 
-  // export const createBoard = async (data) => {
-  //   try {
-  //     const response = await axios.post(`${url}/board`, data);
-  //     console.log("board created");
-  //     return response.data;
-  //   } catch (error) {
-  //     console.error('Error creating board:', error);
-  //     throw new Error('Failed to create board');
-  //   }
-  // };
   export const createClass = async (data) => {
     try {
       const response = await axios.post(`${url}/class`,data );

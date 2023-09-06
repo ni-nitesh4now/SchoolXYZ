@@ -14,7 +14,6 @@ import {
   getCareer,
   getSKillContent,
   getCareerContent,
-  getConceptualQuestion,
 } from "../api/auth";
 import { useFetcher, useLocation } from "react-router-dom";
 import Cookies from "js-cookie";
@@ -41,7 +40,6 @@ const Extra = () => {
   const fileInputRefTrueFalse = useRef(null);
   const fileInputRefFillUp = useRef(null);
   const [addcount, setAddCount] = useState(0);
-
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const bookName = searchParams.get("bookName");
@@ -125,7 +123,7 @@ const Extra = () => {
   const [suggestedSkills, setSuggestedSkills] = useState([]);
   const [selectedSkill, setSelectedSkill] = useState(null);
   const [callSkillApi, setCallSkillApi] = useState(false);
-
+const [isSave, setSave] = useState(false);
   const [careerSet, setCareerSet] = useState(["medical", "technical"]);
   const [suggestedCareer, setSuggestedCareer] = useState([]);
   const [careerStep, setCareerStep] = useState([]);
@@ -186,71 +184,50 @@ const Extra = () => {
   const [currentlyEditingIndexProblem, setCurrentlyEditingIndexProblem] =
     useState(-1);
 
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-  };
+  // const handleDateChange = (date) => {
+  //   setSelectedDate(date);
+  // };
 
   useEffect(() => {
     if (data) {
       const lessonData = JSON.parse(urlParams.get("data"));
       setLid(lessonData._id);
-      console.log(lessonData._id);
-      console.log("dayssss", lessonData.days);
       setDaysData(lessonData.days);
-      console.log("lesson days  ", daysData.length);
     }
   }, [data]);
+
   useEffect(() => {
     console.log("lisgdg", lid);
   }, [lid]);
 
   useEffect(() => {
-    if (activeButton === "Conceptual" && activeQButton >= serviceQList.length) {
-      setServiceQList([...serviceQList, { qservice: "" }]);
-    } else if (
-      activeButton === "Informative" &&
-      activeQButton >= serviceQList.length
-    ) {
-      setServiceQList([...serviceQList, { qservice: "" }]);
-    } else if (
-      activeButton === "Colearning" &&
+    if (
+      (activeButton === "Conceptual" || activeButton === "Informative" || activeButton === "Colearning") &&
       activeQButton >= serviceQList.length
     ) {
       setServiceQList([...serviceQList, { qservice: "" }]);
     }
   }, [activeQButton]);
+  
 
   useEffect(() => {
     if (activeButtonIndex >= serviceList.length) {
-      setServiceList([...serviceQList, { qservice: "" }]);
+      setServiceList([...serviceList, { service: "" }]);
     }
-  });
+  }, [activeButtonIndex]);
 
   useEffect(() => {
-    console.log("careerstep", careerStep);
-  }, [careerStep]);
-  useEffect(() => {
-    console.log("application is ", application);
-    console.log("events", events);
-    console.log("problems", problem);
-    console.log("rele is ", releText);
-    console.log("career ", careerPath);
-    console.log("skills", skillGain);
-  }, [application, events, problem, releText, careerPath, skillGain]);
-
-  useEffect(() => {
-    console.log("hgff", daysData.day1);
     if (daysData.length > 0) {
       const newServiceList = daysData.map((day, index) => {
-        return { qservice: " " };
+        return { service: " " };
       });
 
       setServiceList(newServiceList);
     }
-    if (daysData.length >= 1 && activeButtonIndex === 0) {
-      const d = "day1";
-      const allValue = daysData[0][d];
-      console.log("alrady have values", allValue);
+    if (daysData.length >= 1 && activeButtonIndex<daysData.length) {
+      const allValue = daysData[activeButtonIndex][dynamicKey];
+      if(allValue){
+        console.log( allValue);
       setApplication(allValue.application);
       setTitle(allValue.title);
       setObjective(allValue.objective);
@@ -271,8 +248,10 @@ const Extra = () => {
         setServiceQList(newServiceList);
         console.log("intiall new", newServiceList);
       }
+      }
     }
-  }, [daysData, isSaveClick]);
+  }, [daysData,activeButtonIndex, isSaveClick]);
+
   useEffect(() => {
     const fetchhh = async () => {
       console.log("lid", lid);
@@ -312,10 +291,8 @@ const Extra = () => {
   }, [skillGain, callSkillApi]);
 
   useEffect(() => {
-    //     // setSkillSet([])
     const fetchhh = async () => {
       try {
-        // console.log("lid", lid);
         const res = await getCareer(lid);
         console.log("-get career", res.data);
         setCareerSet(res.data);
@@ -356,12 +333,9 @@ const Extra = () => {
       year: careerInputYear1, //1
     };
     setAddCount(0);
-    console.log(data);
     setCareerStepsData([...careerSteps, data]);
     setCareerInputYear1("");
-
     setCareerInputStep1("");
-    console.log(data);
     careerSteps.push(data);
     if (!careerImage) {
       toast.error("Please add an image");
@@ -451,7 +425,6 @@ const Extra = () => {
 
     const fetchBookname = async () => {
       const bookdata = await getBookName(bk);
-      console.log("bookdata", bookdata);
       const pub = await getPublicationData(bookdata.publication_id);
       setPubName(pub.name);
       const classss = await getClassData(bookdata.class_id);
@@ -464,57 +437,6 @@ const Extra = () => {
       fetchBookname();
     }
   }, []);
-
-  useEffect(() => {
-    const autosaveInterval = setInterval(() => {
-      saveFormData();
-    }, 60000); // Autosave every 60 seconds (adjust the interval as needed)
-
-    // Clear the autosave interval when the component unmounts
-    return () => {
-      clearInterval(autosaveInterval);
-    };
-  }, [
-    isManualUpdate,
-    daysData,
-    application,
-    content,
-    title,
-    objective,
-    events,
-    problem,
-    careerPath,
-    releText,
-    skillGain,
-  ]);
-
-  const showToast = () => {
-    toast.success("Autosaved!", {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: true,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-    });
-  };
-
-  const saveFormData = async () => {
-    if (!isManualUpdate) {
-      console.log("form update", daysData);
-      try {
-        setSaving(true);
-        await handleUpdateLesson(false);
-        setSaving(false);
-      } catch (error) {
-        console.error("Error saving data:", error);
-        toast.error("Error autosaving form data!", {
-          position: toast.POSITION.TOP_RIGHT,
-          autoClose: 2000, // Display toast for 2 seconds
-        });
-      }
-    }
-  };
 
   const modules = {
     toolbar: [
@@ -571,6 +493,7 @@ const Extra = () => {
     }
   };
 
+
   const handleApplication = async (e) => {
     e.preventDefault();
     if (!applicationTitle && !applicationContent && !applicationLinkUrl) {
@@ -581,7 +504,6 @@ const Extra = () => {
     if (applicationImage) {
       const formData = new FormData();
       formData.append("image", applicationImage);
-      console.log("Application image ase hori :", formData);
 
       try {
         const response = await fetch(
@@ -595,8 +517,6 @@ const Extra = () => {
         if (response.ok) {
           const responseData = await response.json();
           const filename = responseData.filename;
-          console.log("application response:", response);
-          console.log("Application filename:::", filename);
           setUploadedImageFilename(filename);
           const app = {
             title: applicationTitle,
@@ -612,10 +532,8 @@ const Extra = () => {
           setApplicationLinkUrl("");
           setImageUploadedApp(false);
         } else {
-          console.error("Failed to upload application.");
         }
       } catch (error) {
-        console.error("Error uploading application:", error);
       }
     } else {
       const app = {
@@ -679,7 +597,6 @@ const Extra = () => {
       if (applicationImage) {
         const formData = new FormData();
         formData.append("image", applicationImage);
-        console.log("Application image ase hori :", formData);
 
         try {
           const response = await fetch(
@@ -693,8 +610,6 @@ const Extra = () => {
           if (response.ok) {
             const responseData = await response.json();
             const filename = responseData.filename;
-            console.log("application response:", response);
-            console.log("Application filename:::", filename);
             setUploadedImageFilename(filename);
             const app = {
               title: applicationTitle,
@@ -838,6 +753,21 @@ const Extra = () => {
       setImageUploadedEvent(false);
     }
   };
+  const buttonRef = useRef(null);
+
+  // Use useEffect to automatically click the button after 1 minute
+  useEffect(() => {
+    if (data) {
+      const timer = setTimeout(() => {
+        if (buttonRef.current) {
+          buttonRef.current.click();
+        }
+      }, 30000); // 60,000 milliseconds = 1 minute
+
+      // Clear the timer if the component unmounts or if data changes
+      return () => clearTimeout(timer);
+    }
+  });
 
   const handleEditEvents = (index) => {
     const clickedItem = events[index];
@@ -860,10 +790,8 @@ const Extra = () => {
     setSelectedDate(clickedItem.date);
     setIsEventUpdate(false);
     setCurrentlyEditingIndexEvent(index);
-    console.log(img);
-
-    // console.log("index is:", currentlyEditingIndex);
   };
+
   const handleUpdateEvents = async (e) => {
     if (!updateImageEvents) {
       const imageFilename = eventImage.split("/").pop();
@@ -1081,7 +1009,6 @@ const Extra = () => {
       return;
     }
     if (selectedSkill) {
-      console.log("Seletec dprnjnd");
       const updated = skillGain.map((item) =>
         item === selectedSkill
           ? {
@@ -1155,8 +1082,6 @@ const Extra = () => {
         // Update state with fetched skill content
         setCareerDescription(response.data.description);
         setCareerSteps(response.data.careerStep);
-        // console.log("carrerStepppp",response.data.careerStep)
-        // setSkillContent(response.data.content);
       };
       fetcContent();
     } catch (error) {
@@ -1260,10 +1185,7 @@ const Extra = () => {
     }
   }, [txtQuestionImage]);
   const handleImageChangeMcqQues = (e) => {
-    console.log("MCQ ki horii idr to vro");
     const selectedFile = e.target.files[0];
-    // console.log("Quesssss");
-    // console.log("here is image for ques", selectedFile);
     if (selectedFile) {
       setTxtQuestionImage(selectedFile);
       fileInputRefMCQ.current.value = null;
@@ -1272,7 +1194,6 @@ const Extra = () => {
 
   const handleImageChangeMcqOption1 = (e) => {
     const selectedFile = e.target.files[0];
-    console.log("here is image for option1", selectedFile);
     if (selectedFile) {
       setOption1Image(selectedFile);
       fileInputRef.current.value = null;
@@ -1280,7 +1201,6 @@ const Extra = () => {
   };
 
   const handleImageChangeMcqOption2 = (e) => {
-    console.log("dekh idr to hora hai yee");
     const selectedFile = e.target.files[0];
     if (selectedFile) {
       setOption2Image(selectedFile);
@@ -1341,7 +1261,6 @@ const Extra = () => {
 
   const handleUpdate = async (manual = true, event) => {
     event.preventDefault();
-
     setIsManualUpdate(manual);
     console.log(manual);
     handleUpdateLesson(manual);
@@ -1518,7 +1437,6 @@ const Extra = () => {
             colearningQues: colearningQuestionList,
           };
         }
-        //await createLesson(newLessonData);
       }
       await createLesson(newLessonData);
       toast.success("lesson added");
@@ -1534,17 +1452,15 @@ const Extra = () => {
       console.error("Error adding lesson:", error);
     }
   };
+  const dynamicKey = `day${activeButtonIndex + 1}`;
 
   const handleUpdateLesson = async (isManual) => {
     setIsManualUpdate(isManual);
-
     let Lid = decodeURIComponent(searchParams.get("id"));
     if (Lid.endsWith("}")) {
       Lid = Lid.slice(0, -1);
     }
-    console.log("hh", Lid);
     let c = "Days" + activeButtonIndex;
-
     const newDay = {
       title: title,
       objective: objective,
@@ -1562,35 +1478,75 @@ const Extra = () => {
     };
 
     if (activeButtonIndex < daysData.length) {
-      console.log("already exist");
       const newObj = "day" + (activeButtonIndex + 1);
       setDaysData((prev) => {
         const updatedDaysData = prev.map((day) => {
           if (day.hasOwnProperty(newObj)) {
-            return { [newObj]: newDay }; // Replace with the new data you want to set
+            return { [newObj]: newDay }; 
           }
           return day;
         });
-
         return updatedDaysData;
       });
     } else {
       setDaysData((prev) => {
-        // Create a new object with a dynamic key based on the length of the array
         const newObjectKey = "day" + (prev.length + 1);
-
-        // Create the new day object
         const newDayObject = { [newObjectKey]: newDay };
-
-        // Merge the new day object with the previous array
         return [...prev, newDayObject];
       });
     }
     toast.success("Saved", {
       position: toast.POSITION.TOP_RIGHT,
-      autoClose: 2000, // Display toast for 2 seconds
+      autoClose: 2000, 
     });
   };
+
+  useEffect(() => {
+    const func = async () => {
+      let Lid = decodeURIComponent(searchParams.get("id"));
+      if (Lid.endsWith("}")) {
+        Lid = Lid.slice(0, -1);
+      }
+      if (searchParams.get("operation") === "assign") {
+        console.log("ismanual in ", isSave);
+        const update = {
+          status: isManualUpdate ? "resume" : "assigned",
+          started: "Yes",
+          completed: "No",
+          days: daysData,
+        };
+
+        const res = await updateLesson(update, Lid);
+        console.log("moved from assign to resume", res.data);
+      } 
+      else if (searchParams.get("operation") === "resume") {
+        console.log("days inside check", daysData);
+        const update = {
+          status: "resume",
+          started: "Yes",
+          completed: "No",
+          days: daysData,
+        };
+        const res = await updateLesson(update, Lid);
+        console.log("still in resume", res.data);
+      } 
+      else if (searchParams.get("operation") === "complete") {
+        const update = {
+          status: "resume",
+          days: daysData,
+          started: "Yes",
+          completed: "No",
+        };
+
+        const res = await updateLesson(update, Lid);
+        console.log("moved to resume from complete", res.data);
+      }
+      setCallSkillApi(true);
+      setCallCareerApi(true);
+    };
+    func();
+  }, [daysData]);
+
 
   useEffect(() => {
     const func = async () => {
@@ -1607,14 +1563,10 @@ const Extra = () => {
           completed: "No",
           days: daysData,
         };
-        //  console.log("here assigned by assign",isManualUpdate)
         const res = await updateLesson(update, Lid);
-        console.log("hello", res.data);
         if (isManualUpdate) {
           navigate("/resumework");
-        } else {
-          setActiveQButton(activeQButton - 1);
-        }
+        } 
       } else if (searchParams.get("operation") === "resume") {
         console.log("days inside check", daysData);
         const update = {
@@ -1625,12 +1577,9 @@ const Extra = () => {
         };
 
         const res = await updateLesson(update, Lid);
-        console.log("hellooooo", res.data);
         if (isManualUpdate) {
           navigate("/completed");
-        } else {
-          setActiveQButton(activeQButton - 1);
-        }
+        } 
       } else if (searchParams.get("operation") === "complete") {
         console.log("ismanual in ", isManualUpdate);
         const update = {
@@ -1641,12 +1590,9 @@ const Extra = () => {
         };
 
         const res = await updateLesson(update, Lid);
-        console.log("hello", res.data);
         if (isManualUpdate) {
           navigate("/resumework");
-        } else {
-          setActiveQButton(activeQButton - 1);
-        }
+        } 
         if (isManualUpdate) {
           toast.success("Moved to resume!", {
             position: toast.POSITION.TOP_RIGHT,
@@ -1700,7 +1646,6 @@ const Extra = () => {
   };
 
   const handleCheckboxChange = (index) => {
-    // Create a new array to modify the selectedAns array without mutating it
     const updatedSelectedAns = [...selectedAnswerType];
 
     if (!selectedAnswerType.includes(index)) {
@@ -1774,6 +1719,7 @@ const Extra = () => {
       }
     }
   };
+
   const handleServiceQAdd = () => {
     setServiceQList([...serviceQList, { qservice: "" }]);
   };
@@ -1803,7 +1749,7 @@ const Extra = () => {
 
   const handleNextQuestion = useCallback((e) => {
     e.preventDefault();
-    toast.success("MOVED TO NEXT");
+    // toast.success("MOVED TO NEXT");
     if (selectedQuestionType === "shortAnswer") {
       const q = txtQuestion;
       const img = txtQuestionImage;
@@ -1813,7 +1759,6 @@ const Extra = () => {
         image: img,
         ans: a,
         aType: selectedQuestionType,
-
         label: label,
         marks: marks,
       };
@@ -1825,29 +1770,30 @@ const Extra = () => {
           setActiveQButton((prevValue) => prevValue + 1);
         } else {
           setInformativeQuestionList([...informativeQuestionList, data]);
-          console.log("info", informativeQuestionList);
           setActiveQButton((prevValue) => prevValue + 1);
         }
-      } else if (activeButton === "Conceptual") {
+      } 
+      else if (activeButton === "Conceptual") {
         if (activeQButton < conceptualQuestionList.length) {
           const updated = [...conceptualQuestionList];
           updated[activeQButton] = data;
           setConceptualQuestionList(updated);
           setActiveQButton((prevValue) => prevValue + 1);
-        } else {
+        } 
+        else {
           setConceptualQuestionList([...conceptualQuestionList, data]);
-          console.log("con", conceptualQuestionList);
           setActiveQButton((prevValue) => prevValue + 1);
         }
-      } else if (activeButton === "Colearning") {
+      } 
+      else if (activeButton === "Colearning") {
         if (activeQButton < colearningQuestionList.length) {
           const updated = [...colearningQuestionList];
           updated[activeQButton] = data;
           setColearningQuestionList(updated);
           setActiveQButton((prevValue) => prevValue + 1);
-        } else {
+        } 
+        else {
           setColearningQuestionList([...colearningQuestionList, data]);
-          console.log("col", colearningQuestionList);
           setActiveQButton((prevValue) => prevValue + 1);
         }
       }
@@ -1886,14 +1832,10 @@ const Extra = () => {
         setConceptualQuestionList([...conceptualQuestionList, data]);
         console.log("con", conceptualQuestionList);
         setActiveQButton((prevValue) => prevValue + 1);
-        //  handleServiceQAdd()
-        //  handleQCLick(conceptualQuestionList.length)
       } else if (activeButton === "Colearning") {
         setColearningQuestionList([...colearningQuestionList, data]);
         console.log("col", colearningQuestionList);
         setActiveQButton((prevValue) => prevValue + 1);
-        //  handleServiceQAdd()
-        //  handleQCLick(colearningQuestionList.length)
       }
       setTxtQuestion("");
       setTxtQuestionImage("");
@@ -1907,11 +1849,9 @@ const Extra = () => {
       selectedQuestionType === "arrangeOrdering"
     ) {
       const q = txtQuestion;
-      // const img = txtQuestionImage;
       const opt1 = option1Text;
       const opt2 = option2Text;
 
-      console.log("image uhsj", option1Image);
 
       const data = {
         ques: q,
@@ -1927,7 +1867,6 @@ const Extra = () => {
         marks: marks,
         selectedAns: selectedAnswerType,
       };
-      console.log("data  for mcq is", data);
 
       if (activeButton === "Informative") {
         if (activeQButton < informativeQuestionList.length) {
@@ -1951,9 +1890,8 @@ const Extra = () => {
           console.log("info", informativeQuestionList);
           setActiveQButton((prevValue) => prevValue + 1);
         }
-        //  handleServiceQAdd()
-        //  handleQCLick(conceptualQuestionList.length)
-      } else if (activeButton === "Colearning") {
+
+        } else if (activeButton === "Colearning") {
         if (activeQButton < colearningQuestionList.length) {
           const updated = [...colearningQuestionList];
           updated[activeQButton] = data;
@@ -1981,7 +1919,6 @@ const Extra = () => {
 
     if (selectedQuestionType === "fillup") {
       const q = txtQuestion;
-      // const img = txtQuestionImage;
       const a = txtAnswer;
       const data = {
         ques: q,
@@ -2052,9 +1989,7 @@ const Extra = () => {
     const buttonType = activeButton;
     if (buttonType === "Colearning") {
       //setServiceQList(colearningQuestionList)
-
       setActiveQButton(informativeQuestionList.length);
-
       setActiveButton("Informative");
       console.log(activeButtonIndex);
       let c = "Days" + activeButtonIndex;
@@ -2072,11 +2007,8 @@ const Extra = () => {
         colearningQues: colearningQuestionList,
         informativeQues: informativeQuestionList,
         conceptualQues: conceptualQuestionList,
-
-        // Replace with the actual appl value
       };
       if (activeButtonIndex < daysData.length) {
-        //   console.log("already exist")
         const newObj = "day" + (activeButtonIndex + 1);
         setDaysData((prev) => {
           const updatedDaysData = prev.map((day) => {
@@ -2090,17 +2022,11 @@ const Extra = () => {
         });
       } else {
         setDaysData((prev) => {
-          // Create a new object with a dynamic key based on the length of the array
           const newObjectKey = "day" + (prev.length + 1);
-
-          // Create the new day object
           const newDayObject = { [newObjectKey]: newDay };
-
-          // Merge the new day object with the previous array
           return [...prev, newDayObject];
         });
       }
-      console.log("daysdata", daysData);
       setActiveButtonIndex((prev) => prev + 1);
       setApplication("");
       setTitle("");
@@ -2115,15 +2041,12 @@ const Extra = () => {
       setTxtQuestionImage("");
       setProblem("");
       setInformativeQuestionList("");
-      // console.log("inside usefffect",searchParams.get('informativeQues'))
       setConceptualQuestionList("");
       setColearningQuestionList("  ");
     } else if (buttonType === "Conceptual") {
-      //  setServiceQList(conceptualQuestionList)
       setActiveButton("Colearning");
       setActiveQButton(colearningQuestionList.length);
     } else if (buttonType === "Informative") {
-      //   setServiceQList(informativeQuestionList)
       setActiveButton("Conceptual");
       setActiveQButton(conceptualQuestionList.length);
     }
@@ -2223,10 +2146,7 @@ const Extra = () => {
                     modules={modules}
                     placeholder="Content"
                   />
-
-                  {/* <Button
-                                className='content_btn' onClick={() => fileInputRef.current.click()}>+</Button> */}
-                </div>
+</div>
 
                 <div className="showApp">
                   <h5>Application</h5>
@@ -2363,11 +2283,7 @@ const Extra = () => {
                                     handleEditApplication(i, index);
                                   }}
                                 >
-                                  {console.log(
-                                    "saxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxyyyyyyyyyyyyyyy",
-                                    i.image
-                                  )}
-                                  {i.image && (
+                                                              {i.image && (
                                     <img
                                       src={`http://127.0.0.1:5000/static/${i.image}`}
                                       style={{
@@ -2472,20 +2388,6 @@ const Extra = () => {
                                 </div>
                               </div>
                             ))}
-
-                          {/*
-          <div className='eachCol'>
-            <div className='description'>
-              <h5>Point</h5>
-              <p style={{marginLeft:"0px"}}>dbhbvhdbhvbhvghvg fff vgh hghf</p>
-            </div>
-          </div>
-          <div className='eachCol'>
-            <div className='description'>
-              <h5>Point</h5>
-              <p style={{marginLeft:"0px"}}>dbhbvhdbhvbhvghvg fff vgh hghf</p>
-            </div>
-          </div> */}
                         </div>
                       </div>
                     </div>
@@ -2884,7 +2786,6 @@ const Extra = () => {
                                       }}
                                     />
                                   )}
-                                  {/* <img src="https://media.istockphoto.com/id/1148635445/photo/abstract-black-grainy-paper-texture-background-or-backdrop-empty-asphalt-road-surface-for.webp?b=1&s=170667a&w=0&k=20&c=SsSK-YbyIA9JkT9_v3btSjc2y__mAoCn6uYJ8LKx9PI=" style={{width:'70px',height:'70px',borderRadius:'20px'}}/> */}
                                   <div className="description">
                                     <h5>{i.about}</h5>
                                     <h6>{i.description}</h6>
@@ -2977,36 +2878,7 @@ const Extra = () => {
                         ></textarea>
                         <div className="career-info">
                           <div className="career-grid">
-                            {/* <input
-                            type="text"
-                            value={careerInputStep1}
-                            placeholder="Step 1"
-                            className="input1"
-                            onChange={(e) => setCareerInputStep1(e.target.value)}
-                          />
-                          <input
-                            type="text"
-                            value={careerInputYear1}
-                            placeholder="Years Needed"
-                            className="input2"
-                            onChange={(e) => setCareerInputYear1(e.target.value)}
-                          />
-                            <input
-                            type="text"
-                            placeholder="Step 2 "
-                            value={careerInputStep2}
-                            className="input1"
-                            onChange={(e) => setCareerInputStep2(e.target.value)}
-                          />
-                          <input
-                            type="text"
-                            placeholder="Years Needed"
-                            value={careerInputYear2}
-                            className="input2"
-                            onChange={(e) => setCareerInputYear2(e.target.value)}
-                          />  */}
-
-                            {careerSteps &&
+                               {careerSteps &&
                               careerSteps.map((item, index) => (
                                 <div key={index}>
                                   <input
@@ -3024,25 +2896,7 @@ const Extra = () => {
                                 </div>
                               ))}
                             <div>
-                              {/* {careerStep.length > 0 && <h1>dghghyg</h1>}
-{careerStep.map((ele, index) => (
-  <div key={index}>
-    <input
-      type="text"
-      value={ele.step}
-      placeholder="Step"
-      className="input1"
-      onChange={(e) => setCareerInputStep1(e.target.value)}
-    />
-    <input
-      type="text"
-      value={ele.year}
-      placeholder="Years Needed"
-      className="input2"
-      onChange={(e) => setCareerInputYear1(e.target.value)}
-    />
-  </div>
-))} */}
+                         
                               <input
                                 type="text"
                                 value={careerInputStep1}
@@ -3110,14 +2964,11 @@ const Extra = () => {
                             className="skillRow"
                             style={{ marginTop: "4vh", marginLeft: "0.5vh" }}
                           >
-                            {careerPath.length>0 ? (careerPath.map((career, index) => (
+                            {Array.isArray(careerPath) && careerPath.map((career, index) => (
                               <div key={index} className="careerRight">
                                 {" "}
-                                {/* Added key attribute */}
-                                {/* <img src="https://media.istockphoto.com/id/1443022226/photo/black-leather-texture-background.webp?b=1&s=170667a&w=0&k=20&c=JluczfcCJXPyUSgATnnnuA33X2Rma_pOfDif9LdTb9Y=" style={{width:'40px',height:'40px',borderRadius:'50%'}}/> */}
                                 <div className="you">You</div>
                                 {career.careerStep.map((e, stepIndex) => (
-                                  // Added stepIndex as a second argument
                                   <div style={{ display: "flex" }}>
                                     <div className="carrerRightInside">
                                       <h6 style={{ marginTop: "-0.3vh" }}>
@@ -3188,40 +3039,13 @@ const Extra = () => {
                                   }}
                                 />
                               </div>
-                            ))):(<></>)}
+                            ))}
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 )}
-
-                {/* <div className='box2'>
-                         <div className='b2row1'>
-
-                              <div className='row1c'>
-                              <Button
-                                variant={activeButton === 'Informative' ? 'primary' : 'outline-primary'}
-                                // onClick={() => handleButtonActiveClick('Informative')}
-
-                                className='mb-2'>Informative</Button>
-                              </div>
-                              <div className='row1c'>
-                              <Button
-                               variant={activeButton === 'Conceptual' ? 'primary' : 'outline-primary'}
-                            //    onClick={() => handleButtonActiveClick('Conceptual')}
-                                className='mb-2'>Conceptual</Button>
-                              </div>
-                              <div className='row1c'>
-                              <Button
-                                variant={activeButton === 'Colearning' ? 'primary' : 'outline-primary'}
-                            //    onClick={() => handleButtonActiveClick('Colearning')}
-
-                                className='mb-2'>Colearning</Button>
-                              </div>
-
-                         </div>
-                         </div> */}
 
                 <div className="question-info-box">
                   <div className="b2row1">
@@ -3246,7 +3070,6 @@ const Extra = () => {
                             ? "primary"
                             : "outline-primary"
                         }
-                        //    onClick={() => handleButtonActiveClick('Conceptual')}
                         className="mb-2"
                       >
                         Conceptual
@@ -3259,7 +3082,6 @@ const Extra = () => {
                             ? "primary"
                             : "outline-primary"
                         }
-                        //    onClick={() => handleButtonActiveClick('Colearning')}
 
                         className="mb-2"
                       >
@@ -3281,7 +3103,7 @@ const Extra = () => {
                             <span>Q {index + 1}</span>
                           </button>
                         </div>
-                        {/* {serviceQList.length - 1 == index && (
+                        {serviceQList.length - 1 == index && (
                           <div className="first-div">
                             {serviceQList.length - 1 === index &&
                               serviceQList.length < 15 && (
@@ -3294,7 +3116,7 @@ const Extra = () => {
                                 </button>
                               )}
                           </div>
-                        )} */}
+                        )}
                       </div>
                     ))}
                   </div>
@@ -3645,7 +3467,6 @@ const Extra = () => {
                     </div>
                   </div>
                 </div>
-
                 <div className="question-view">
                   {Array.isArray(selectedQuestionList) &&
                   selectedQuestionList.length > 0 ? (
@@ -3653,7 +3474,6 @@ const Extra = () => {
                       <div>
                         <div className="question-view-upper">
                           <h5 className="questionViewQuestion">
-                            {console.log(item)}
                             <FontAwesomeIcon icon={faCircle} /> {item.ques}
                           </h5>
                           <span>
@@ -3751,6 +3571,7 @@ const Extra = () => {
                         }, 1000);
                       }}
                       style={{ marginBottom: "-20px" }}
+                      ref={buttonRef} // Attach the ref to the button element
                     >
                       Save
                     </button>
@@ -3765,7 +3586,6 @@ const Extra = () => {
                   </div>
                 )}
 
-                {isSaveClick && <div className="saving-message">Saving...</div>}
 
                 {data && (
                   <div className="row10">
