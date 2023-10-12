@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Container, Form, Row } from "react-bootstrap";
+import { Button, Container,  Row } from "react-bootstrap";
 import Adminsidenav from "./Adminsidenav";
 import { BiBlock } from "react-icons/bi";
 import { AiFillDelete } from "react-icons/ai";
@@ -23,7 +23,6 @@ import {
   getClassDataByName,
   restrictBookname,
 } from "../api/auth";
-import { useAsyncError } from "react-router-dom";
 
 const styles = {
   container: {
@@ -459,7 +458,7 @@ const Addbook = () => {
                     </div>
 
                     <div className="userCol4" style={styles.col3}>
-                      <a
+                      <button
                         style={{
                           ...styles.funcLink,
                           color: b.blocked ? "red" : "grey",
@@ -468,19 +467,19 @@ const Addbook = () => {
                       >
                         <BiBlock />
                         &nbsp;&nbsp;&nbsp;
-                      </a>
-                      <a
+                      </button>
+                      <button
                         style={styles.funcLink}
                         onClick={() => handleDeleteBook(b._id)}
                       >
                         <AiFillDelete />
-                      </a>
-                      <a
+                      </button>
+                      <button
                         style={{ ...styles.funcLink, marginLeft: "15px" }}
                         onClick={() => fetchUpdateData(b._id, b.blocked)}
                       >
                         <RxUpdate />
-                      </a>
+                      </button>
                     </div>
                   </div>
                 ))}
