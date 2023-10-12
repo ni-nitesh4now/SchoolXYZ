@@ -36,26 +36,6 @@ const Usersidebar = ({ children }) => {
   return (
     <div className="container">
       <div style={{ width: isOpen ? "30vw" : "60px" }} className="sidebar">
-        <div className="top_section">
-          <img
-            style={{ display: isOpen ? "block" : "none" }}
-            alt="SP"
-            src={LOGO2}
-            className="logo_icon"
-          />
-          <h1 style={{ display: isOpen ? "block" : "none" }} className="logo">
-            School
-          </h1>
-          <h1
-            style={{ display: isOpen ? "block" : "none" }}
-            className="logo_pen"
-          >
-            Pen
-          </h1>
-          <div style={{ marginLeft: isOpen ? "0px" : "0px" }} className="bars">
-            <FaBars onClick={toggle} />
-          </div>
-        </div>
         {menuItem.map((item, index) => (
           <NavLink
             to={item.path}
